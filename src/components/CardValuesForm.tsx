@@ -3,10 +3,17 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 
 import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
-import { CheckCircle } from "@mui/icons-material";
-import { Stack } from "@mui/material";
+import CardValuesPresetList from "./CardValuesPresetList";
+import CheckCircle from "@mui/icons-material/CheckCircle";
+import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField/TextField";
 import { setScoreList } from "../store/scrumSlice";
+
+const presets = [
+  [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89],
+  [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100],
+  [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512],
+];
 
 const CardValuesForm = () => {
   let isValid = true;
@@ -31,6 +38,12 @@ const CardValuesForm = () => {
     setIsSubmitted(true);
   };
 
+  const handlePresetSelection = (set: number[]) => {
+    dispatch(setScoreList(set));
+    setScoreListInput(set.join(", "));
+    setIsSubmitted(true);
+  };
+
   const validateScoreListInput = () => {
     if (scoreListInput.length === 0) {
       isValid = false;
@@ -43,6 +56,11 @@ const CardValuesForm = () => {
     }
   };
   validateScoreListInput();
+
+  const savedSetsString = window.localStorage.getItem("cardSetStorage");
+  const savedSets = (
+    savedSetsString ? JSON.parse(savedSetsString) : { sets: [] }
+  ) as CardSetStorage;
 
   return (
     <Box component="form" className="card-values-form" onSubmit={handleSubmit}>
@@ -67,6 +85,16 @@ const CardValuesForm = () => {
         </Button>
         {isSubmitted && <CheckCircle color="success" />}
       </Stack>
+      <CardValuesPresetList
+        title="Presets"
+        onClick={handlePresetSelection}
+        presets={presets}
+      />
+      <CardValuesPresetList
+        title="History"
+        onClick={handlePresetSelection}
+        presets={savedSets.sets}
+      />
     </Box>
   );
 };
