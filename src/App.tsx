@@ -16,6 +16,7 @@ import {
 import hub, { HubMethods } from "./hub";
 import { useAppDispatch, useAppSelector } from "./hooks";
 
+import { HubConnectionState } from "@microsoft/signalr";
 import IssuesView from "./components/IssuesView";
 import JoinOrCreate from "./components/JoinOrCreate";
 import NameSelection from "./components/NameSelection";
@@ -35,53 +36,62 @@ function App() {
 
   useEffect(() => {
     const initListerners = () => {
-      const conn = hub.connection;
-      conn.on(HubMethods.RECEIVE_MEMBER, (user: User) => {
-        console.log("New member ", user);
-        dispatch(newMember(user));
-      });
-      conn.on(HubMethods.RECEIVE_ISSUE, (issue: Issue) => {
-        console.log("Received issue ", issue);
-        dispatch(newIssue({ value: issue }));
-      });
-      conn.on(HubMethods.RECEIVE_VOTE, (vote: Vote) => {
-        console.log("Received vote ", vote);
-        dispatch(newVote(vote));
-      });
-      conn.on(HubMethods.RECEIVE_SCORE_LIST, (scoreList: number[]) => {
-        console.log("Received score list ", scoreList);
-        dispatch(newScoreList(scoreList));
-      });
-      conn.on(HubMethods.RECEIVE_ROOM_ACCEPTION, (room: Room) => {
-        console.log("Accepted in ", room);
-        dispatch(loadRoom(room));
-        navigate(`/${room.id}`);
-      });
-      conn.on(HubMethods.RECEIVE_USER_LEFT, (userId: string) => {
-        console.log("User left ", userId);
-        dispatch(removeUser(userId));
-      });
-      conn.on(HubMethods.RECEIVE_RESULT_REVEALED, () => {
-        console.log("Result revealed");
-        dispatch(revealResult());
-      });
-      conn.on(HubMethods.RECEIVE_ISSUE_SWITCH, (issueIndex: number) => {
-        console.log("Issue switched ", issueIndex);
-        dispatch(switchIssue({ value: issueIndex }));
-      });
-      conn.on(HubMethods.RECEIVE_OWNER_DESIGNATION, (ownerId: string) => {
-        console.log("Owner designation");
-        dispatch(designateOwner(ownerId));
-      });
-      conn.on(HubMethods.RECEIVE_NEXT_ROUND, () => {
-        console.log("Next round");
-        dispatch(nextRound({ value: null }));
-      });
-      isListening = true;
-      console.log("Listening to hub");
+      try {
+        if (isListening) return;
+
+        const conn = hub.connection;
+        if (conn.state !== HubConnectionState.Connected)
+          throw Error("Not connected");
+
+        conn.on(HubMethods.RECEIVE_MEMBER, (user: User) => {
+          console.log("New member ", user);
+          dispatch(newMember(user));
+        });
+        conn.on(HubMethods.RECEIVE_ISSUE, (issue: Issue) => {
+          console.log("Received issue ", issue);
+          dispatch(newIssue({ value: issue }));
+        });
+        conn.on(HubMethods.RECEIVE_VOTE, (vote: Vote) => {
+          console.log("Received vote ", vote);
+          dispatch(newVote(vote));
+        });
+        conn.on(HubMethods.RECEIVE_SCORE_LIST, (scoreList: number[]) => {
+          console.log("Received score list ", scoreList);
+          dispatch(newScoreList(scoreList));
+        });
+        conn.on(HubMethods.RECEIVE_ROOM_ACCEPTION, (room: Room) => {
+          console.log("Accepted in ", room);
+          dispatch(loadRoom(room));
+          navigate(`/${room.id}`);
+        });
+        conn.on(HubMethods.RECEIVE_USER_LEFT, (userId: string) => {
+          console.log("User left ", userId);
+          dispatch(removeUser(userId));
+        });
+        conn.on(HubMethods.RECEIVE_RESULT_REVEALED, () => {
+          console.log("Result revealed");
+          dispatch(revealResult());
+        });
+        conn.on(HubMethods.RECEIVE_ISSUE_SWITCH, (issueIndex: number) => {
+          console.log("Issue switched ", issueIndex);
+          dispatch(switchIssue({ value: issueIndex }));
+        });
+        conn.on(HubMethods.RECEIVE_OWNER_DESIGNATION, (ownerId: string) => {
+          console.log("Owner designation");
+          dispatch(designateOwner(ownerId));
+        });
+        conn.on(HubMethods.RECEIVE_NEXT_ROUND, () => {
+          console.log("Next round");
+          dispatch(nextRound({ value: null }));
+        });
+        isListening = true;
+        console.log("Listening to hub");
+      } catch (err) {
+        setTimeout(initListerners, 5100);
+      }
     };
 
-    !isListening && initListerners();
+    initListerners();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
