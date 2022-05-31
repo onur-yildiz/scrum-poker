@@ -1,4 +1,8 @@
-import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import {
+  HttpTransportType,
+  HubConnectionBuilder,
+  LogLevel,
+} from "@microsoft/signalr";
 
 export enum ClientMethods {
   SEND_SET_NAME = "SetName",
@@ -30,7 +34,10 @@ export enum HubMethods {
 }
 
 const connection = new HubConnectionBuilder()
-  .withUrl(process.env.REACT_APP_HUB_URL as string)
+  .withUrl(process.env.REACT_APP_HUB_URL as string, {
+    skipNegotiation: true,
+    transport: HttpTransportType.WebSockets,
+  })
   .configureLogging(LogLevel.Information)
   .build();
 
