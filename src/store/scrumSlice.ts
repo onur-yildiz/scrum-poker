@@ -208,7 +208,11 @@ const scrumSlice = createSlice({
     },
     leaveRoom(state) {
       console.debug("leaveRoom");
-      hub.connection.send(ClientMethods.SEND_LEAVE_ROOM, state.room.id);
+      hub.connection.send(
+        ClientMethods.SEND_LEAVE_ROOM,
+        state.room.id,
+        state.user.id
+      );
       return initialState;
     },
     removeUser(state, action: PayloadAction<string>) {
