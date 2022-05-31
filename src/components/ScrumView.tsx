@@ -34,7 +34,7 @@ const ScrumView = () => {
           onClick={handleReveal}
           disabled={issue.rounds[issue.rounds.length - 1].votes.length === 0}
         >
-          reveal results
+          reveal result
         </Button>
       )}
       {isOwner && isResultRevealed && (
