@@ -3,6 +3,8 @@ import hub, { ClientMethods } from "../hub";
 
 import { v5 } from "uuid";
 
+const defaultScoreList = [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100];
+
 interface EmittableValue<T> {
   value: T;
   shouldEmit?: boolean;
@@ -42,7 +44,11 @@ const initialState: UserState = {
         rounds: [{ votes: [] }],
       },
     ],
-    scoreList: [0, 0.5, 1, 2, 4, 8, 20, 40, 100],
+    scoreList:
+      window.localStorage
+        .getItem("lastUsedSet")
+        ?.split(",")
+        .map((n) => parseInt(n)) ?? defaultScoreList,
     issueIndex: 0,
   },
   isOwner: false,
@@ -90,6 +96,17 @@ const scrumSlice = createSlice({
       console.debug("setScoreList");
       if (!state.isOwner) return;
       state.room.scoreList = action.payload;
+
+      window.localStorage.setItem("lastUsedSet", action.payload.join(","));
+      const cardSetStorage = window.localStorage.getItem("cardSetStorage");
+      let storageVal: CardSetStorage = { sets: [action.payload] };
+      if (cardSetStorage) {
+        storageVal = JSON.parse(cardSetStorage) as CardSetStorage;
+        storageVal.sets.push(action.payload);
+        storageVal.sets.length > 3 && storageVal.sets.shift();
+      }
+      window.localStorage.setItem("cardSetStorage", JSON.stringify(storageVal));
+
       hub.connection.send(
         ClientMethods.SEND_SET_SCORE_LIST,
         state.room.id,
