@@ -35,9 +35,9 @@ let lightTheme = createTheme({
       light: "#94e820",
     },
     secondary: {
-      main: blueGrey[400],
-      dark: blueGrey[600],
-      light: blueGrey[50],
+      main: blueGrey[500],
+      dark: blueGrey[800],
+      light: blueGrey[100],
     },
     background: {
       paper: grey[50],
