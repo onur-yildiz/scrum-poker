@@ -32,6 +32,10 @@ const NavBar = () => {
     navigate("/");
   };
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(window.location.href);
+  };
+
   return (
     <AppBar
       id="navbar"
@@ -47,7 +51,9 @@ const NavBar = () => {
           <Tab label="Settings" onClick={() => navigate("settings")} />
         </Tabs>
 
-        <Button sx={{ mr: 2 }}>copy link</Button>
+        <Button onClick={handleCopy} sx={{ mr: 2 }}>
+          copy link
+        </Button>
         <Typography sx={{ mr: 2 }} variant="subtitle1">
           {userName}
         </Typography>
