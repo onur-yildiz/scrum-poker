@@ -22,10 +22,7 @@ const NameChangeForm = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isEmpty) return;
-    const data = new FormData(e.currentTarget);
-    const name = data.get("username")?.toString();
-    if (!name || name.length === 0) return;
-    dispatch(setName(name.toString()));
+    dispatch(setName(nameInput));
     setIsSubmitted(true);
   };
 
