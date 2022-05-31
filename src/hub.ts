@@ -30,7 +30,7 @@ export enum HubMethods {
 }
 
 const connection = new HubConnectionBuilder()
-  .withUrl("https://localhost:7112/scrumhub")
+  .withUrl(process.env.REACT_APP_HUB_URL as string)
   .configureLogging(LogLevel.Information)
   .build();
 
