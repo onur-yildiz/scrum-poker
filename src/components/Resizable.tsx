@@ -26,7 +26,6 @@ const Resizable = (props: PropsWithChildren<any>) => {
     );
     setLeftWidth(`${(newWidth / window.innerWidth) * 100}%`);
     setRightWidth(`${100 - (newWidth / window.innerWidth) * 100}%`);
-    console.log(e.clientX);
   }, []);
 
   return (

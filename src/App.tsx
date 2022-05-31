@@ -44,48 +44,48 @@ function App() {
           throw Error("Not connected");
 
         conn.on(HubMethods.RECEIVE_MEMBER, (user: User) => {
-          console.log("New member ", user);
+          console.debug("New member ", user);
           dispatch(newMember(user));
         });
         conn.on(HubMethods.RECEIVE_ISSUE, (issue: Issue) => {
-          console.log("Received issue ", issue);
+          console.debug("Received issue ", issue);
           dispatch(newIssue({ value: issue }));
         });
         conn.on(HubMethods.RECEIVE_VOTE, (vote: Vote) => {
-          console.log("Received vote ", vote);
+          console.debug("Received vote ", vote);
           dispatch(newVote(vote));
         });
         conn.on(HubMethods.RECEIVE_SCORE_LIST, (scoreList: number[]) => {
-          console.log("Received score list ", scoreList);
+          console.debug("Received score list ", scoreList);
           dispatch(newScoreList(scoreList));
         });
         conn.on(HubMethods.RECEIVE_ROOM_ACCEPTION, (room: Room) => {
-          console.log("Accepted in ", room);
+          console.debug("Accepted in ", room);
           dispatch(loadRoom(room));
           navigate(`/${room.id}`);
         });
         conn.on(HubMethods.RECEIVE_USER_LEFT, (userId: string) => {
-          console.log("User left ", userId);
+          console.debug("User left ", userId);
           dispatch(removeUser(userId));
         });
         conn.on(HubMethods.RECEIVE_RESULT_REVEALED, () => {
-          console.log("Result revealed");
+          console.debug("Result revealed");
           dispatch(revealResult());
         });
         conn.on(HubMethods.RECEIVE_ISSUE_SWITCH, (issueIndex: number) => {
-          console.log("Issue switched ", issueIndex);
+          console.debug("Issue switched ", issueIndex);
           dispatch(switchIssue({ value: issueIndex }));
         });
         conn.on(HubMethods.RECEIVE_OWNER_DESIGNATION, (ownerId: string) => {
-          console.log("Owner designation");
+          console.debug("Owner designation");
           dispatch(designateOwner(ownerId));
         });
         conn.on(HubMethods.RECEIVE_NEXT_ROUND, () => {
-          console.log("Next round");
+          console.debug("Next round");
           dispatch(nextRound({ value: null }));
         });
         isListening = true;
-        console.log("Listening to hub");
+        console.debug("Listening to hub");
       } catch (err) {
         setTimeout(initListerners, 5100);
       }
