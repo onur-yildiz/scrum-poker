@@ -29,7 +29,11 @@ const ScrumView = () => {
     <Box className="scrum-screen-view">
       <IssueBox />
       {isOwner && !isResultRevealed && (
-        <Button size="large" onClick={handleReveal}>
+        <Button
+          size="large"
+          onClick={handleReveal}
+          disabled={issue.rounds[issue.rounds.length - 1].votes.length === 0}
+        >
           reveal results
         </Button>
       )}
