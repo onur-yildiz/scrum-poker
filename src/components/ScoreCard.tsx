@@ -36,15 +36,14 @@ const ScoreCard = (props: PropsWithChildren<OutlinedCardProps>) => {
     );
   };
 
+  const isSelected = currentVoteValue === parseFloat(props.value);
   return (
     <Paper
       className={`${props.className} flex-center unselectable`}
       onClick={handleVote}
       sx={{
-        backgroundColor:
-          currentVoteValue === parseFloat(props.value)
-            ? theme.palette.primary.main
-            : null,
+        backgroundColor: isSelected ? theme.palette.primary.main : null,
+        color: isSelected ? theme.palette.primary.contrastText : null,
       }}
     >
       <span className="card-span">{props.value}</span>
