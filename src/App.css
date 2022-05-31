@@ -126,6 +126,7 @@ body,
   height: calc(var(--vh) * 100);
   overflow-y: auto;
   padding: 1em;
+  overflow-x: hidden;
 }
 
 .scrum-screen-view>*:not(:last-child) {
