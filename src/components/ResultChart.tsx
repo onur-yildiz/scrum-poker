@@ -8,10 +8,34 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import { Box, Typography } from "@mui/material";
 
 import { Bar } from "react-chartjs-2";
 import { PropsWithChildren } from "react";
 
+const colors = [
+  "#e6194b",
+  "#3cb44b",
+  "#3cb44b",
+  "#ffe119",
+  "#0082c8",
+  "#f58231",
+  "#911eb4",
+  "#46f0f0",
+  "#f032e6",
+  "#d2f53c",
+  "#fabebe",
+  "#008080",
+  "#e6beff",
+  "#aa6e28",
+  "#fffac8",
+  "#800000",
+  "#aaffc3",
+  "#808000",
+  "#ffd8b1",
+  "#000080",
+  "#808080",
+];
 interface ResultChartProps {
   issue: Issue;
 }
@@ -74,11 +98,31 @@ const ResultChart = (props: PropsWithChildren<ResultChartProps>) => {
       data: labels.map(
         (label) => round.votes.filter((vote) => vote.value === label).length
       ),
-      // backgroundColor: theme.palette.primary.dark,
+      backgroundColor: colors[i % colors.length],
     })),
   };
 
-  return <Bar options={options} data={data} />;
+  const roundAverage =
+    rounds[rounds.length - 1].votes.reduce((a, b) => a + b.value, 0) /
+    rounds[rounds.length - 1].votes.length;
+  const cumulativeAverage =
+    votes.reduce((prev, cur) => prev + cur) / votes.length;
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: "1200px",
+      }}
+    >
+      <Typography variant="subtitle2" display="inline" sx={{ mr: 2 }}>
+        Round Average: {roundAverage.toFixed(2)}
+      </Typography>
+      <Typography variant="subtitle2" display="inline">
+        Cumulative Average: {cumulativeAverage.toFixed(2)}
+      </Typography>
+      <Bar options={options} data={data} />
+    </Box>
+  );
 };
 
 export default ResultChart;
