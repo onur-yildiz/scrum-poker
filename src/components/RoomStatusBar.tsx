@@ -17,7 +17,7 @@ const RoomStatusBar = () => {
       <Typography sx={{ flexGrow: 1 }} variant="h6" noWrap>
         {memberCount}
       </Typography>
-      <Typography variant="h6" noWrap>
+      <Typography sx={{ mr: 1 }} variant="h6" noWrap>
         {issueTitle}
       </Typography>
       <Numbers />
