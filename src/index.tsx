@@ -16,7 +16,7 @@ import store from "./store/store";
 
 const run = async () => {
   if (hub.connection.state !== HubConnectionState.Disconnected) return;
-  await hub.connection.start();
+  await hub.start();
 
   const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
