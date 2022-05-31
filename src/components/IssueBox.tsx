@@ -40,6 +40,7 @@ const IssueBox = () => {
           description: "No description provided.",
           rounds: [{ votes: [] }],
         },
+        shouldEmit: true,
       })
     );
     handleIssueSwitch(true);
