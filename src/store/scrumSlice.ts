@@ -35,9 +35,9 @@ const initialState: UserState = {
     members: [],
     issues: [
       {
-        id: "starter-issue",
+        id: "starting-issue",
         creatorId: window.localStorage.getItem("userId")!,
-        title: "Issue - 1",
+        title: "Issue 1",
         description: "Try to find a way to make this work",
         rounds: [{ votes: [] }],
       },
