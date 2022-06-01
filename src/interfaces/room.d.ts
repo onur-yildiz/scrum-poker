@@ -6,4 +6,5 @@ interface Room {
   scoreList: number[];
   issueIndex: number;
   consensusThreshold: number;
+  isResultRevealed: boolean;
 }

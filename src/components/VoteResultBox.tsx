@@ -21,7 +21,7 @@ const VoteResultBox = (props: PropsWithChildren<VoteResultBoxProps>) => {
   });
   const clientUserId = useAppSelector((state) => state.scrum.user.id);
   const isResultRevealed = useAppSelector(
-    (state) => state.scrum.isResultRevealed
+    (state) => state.scrum.room.isResultRevealed
   );
 
   const isClientUser = clientUserId === vote.userId;

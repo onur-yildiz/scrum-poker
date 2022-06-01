@@ -10,7 +10,7 @@ import ResultChart from "./ResultChart";
 const ScrumView = () => {
   const dispatch = useAppDispatch();
   const isResultRevealed = useAppSelector(
-    (state) => state.scrum.isResultRevealed
+    (state) => state.scrum.room.isResultRevealed
   );
   const isOwner = useAppSelector((state) => state.scrum.isOwner);
   const issue = useAppSelector(

@@ -13,7 +13,6 @@ interface EmittableValue<T> {
 interface UserState {
   user: User;
   room: Room;
-  isResultRevealed: boolean;
   isOwner: boolean;
   currentVoteValue?: number;
 }
@@ -53,9 +52,9 @@ const initialState: UserState = {
     consensusThreshold: Number(
       window.localStorage.getItem("consensusThreshold") ?? -1
     ),
+    isResultRevealed: false,
   },
   isOwner: false,
-  isResultRevealed: false,
 };
 
 const scrumSlice = createSlice({
@@ -157,7 +156,7 @@ const scrumSlice = createSlice({
       const index = action.payload.value;
       if (index >= state.room.issues.length || index < 0) return;
       state.room.issueIndex = action.payload.value;
-      state.isResultRevealed = false;
+      state.room.isResultRevealed = false;
       state.currentVoteValue = undefined;
 
       action.payload.shouldEmit &&
@@ -181,7 +180,7 @@ const scrumSlice = createSlice({
     },
     castVote(state, action: PayloadAction<{ roomId: string; vote: Vote }>) {
       console.debug("castVote");
-      if (state.isResultRevealed) return;
+      if (state.room.isResultRevealed) return;
       const issue = state.room.issues.find(
         (i) => i.id === action.payload.vote.issueId
       );
@@ -199,8 +198,8 @@ const scrumSlice = createSlice({
     },
     revealResult(state) {
       console.debug("revealResult");
-      if (state.isResultRevealed) return;
-      state.isResultRevealed = true;
+      if (state.room.isResultRevealed) return;
+      state.room.isResultRevealed = true;
       state.isOwner &&
         hub.connection.send(
           ClientMethods.SEND_REVEAL_RESULT,
@@ -211,7 +210,7 @@ const scrumSlice = createSlice({
     nextRound(state, action: PayloadAction<EmittableValue<null>>) {
       console.debug("nextRound");
       state.room.issues[state.room.issueIndex].rounds.push({ votes: [] });
-      state.isResultRevealed = false;
+      state.room.isResultRevealed = false;
       state.currentVoteValue = undefined;
 
       action.payload.shouldEmit &&

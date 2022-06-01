@@ -8,7 +8,7 @@ const Votes = () => {
     return issue.rounds[issue.rounds.length - 1].votes;
   });
   const isResultRevealed = useAppSelector(
-    (state) => state.scrum.isResultRevealed
+    (state) => state.scrum.room.isResultRevealed
   );
 
   return (
