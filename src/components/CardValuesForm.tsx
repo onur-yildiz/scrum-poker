@@ -90,11 +90,13 @@ const CardValuesForm = () => {
         onClick={handlePresetSelection}
         presets={presets}
       />
-      <CardValuesPresetList
-        title="History"
-        onClick={handlePresetSelection}
-        presets={savedSets.sets}
-      />
+      {savedSets.sets.length > 0 && (
+        <CardValuesPresetList
+          title="History"
+          onClick={handlePresetSelection}
+          presets={savedSets.sets}
+        />
+      )}
     </Box>
   );
 };
