@@ -1,7 +1,6 @@
-import { Divider, List, ListItem, Paper, Typography } from "@mui/material";
+import { List, ListItem, Paper, Typography } from "@mui/material";
 
 import AssignmentInd from "@mui/icons-material/AssignmentInd";
-import Box from "@mui/system/Box";
 import RoomStatusBar from "./RoomStatusBar";
 import StarsIcon from "@mui/icons-material/Stars";
 import VoteResultBox from "./VoteResultBox";
