@@ -20,7 +20,7 @@ const StartWrapper = (props: PropsWithChildren<any>) => {
         <Typography
           variant="h2"
           display="inline"
-          color={theme.palette.secondary.dark}
+          color={theme.palette.secondary.main}
           sx={{ fontWeight: "light" }}
         >
           smart
