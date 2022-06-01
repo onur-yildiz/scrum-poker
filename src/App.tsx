@@ -3,6 +3,7 @@ import "./App.css";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import {
   assignUserToIssue,
+  changeUserName,
   designateOwner,
   loadRoom,
   newIssue,
@@ -95,6 +96,13 @@ function App() {
           (issueId: string, assigneeId: string) => {
             console.debug("Assignee ", issueId, assigneeId);
             dispatch(assignUserToIssue({ issueId, assigneeId }));
+          }
+        );
+        conn.on(
+          HubMethods.RECEIVE_NAME_CHANGE,
+          (userId: string, name: string) => {
+            console.debug("Name change ", userId, name);
+            dispatch(changeUserName({ userId, name }));
           }
         );
 

@@ -33,6 +33,7 @@ export enum HubMethods {
   RECEIVE_OWNER_DESIGNATION = "ReceiveOwnerDesignation",
   RECEIVE_CONSENSUS_THRESHOLD = "ReceiveConsensusThreshold",
   RECEIVE_ASSIGNEE = "ReceiveAssignee",
+  RECEIVE_NAME_CHANGE = "ReceiveNameChange",
   // RECEIVE_MESSAGE = "ReceiveMessage",
 }
 

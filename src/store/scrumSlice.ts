@@ -62,16 +62,19 @@ const scrumSlice = createSlice({
   name: "scrum",
   initialState,
   reducers: {
-    setName(state, action: PayloadAction<string>) {
-      state.user.name = action.payload;
-      window.localStorage.setItem("username", action.payload);
+    setName(state, action: PayloadAction<EmittableValue<string>>) {
+      state.user.name = action.payload.value;
+      const user = state.room.members.find((user) => user.id === state.user.id);
+      if (!user) return;
+      user.name = action.payload.value;
+      window.localStorage.setItem("username", action.payload.value);
 
       state.room.id !== "" &&
         hub.connection.send(
           ClientMethods.SEND_SET_NAME,
           state.room.id,
           state.user.id,
-          action.payload
+          action.payload.value
         );
     },
     createRoom(state, action: PayloadAction<string>) {
@@ -274,6 +277,16 @@ const scrumSlice = createSlice({
       if (!issue) return;
       issue.assigneeId = action.payload.assigneeId;
     },
+    changeUserName(
+      state,
+      action: PayloadAction<{ userId: string; name: string }>
+    ) {
+      const user = state.room.members.find(
+        (user) => user.id === action.payload.userId
+      );
+      if (!user) return;
+      user.name = action.payload.name;
+    },
   },
 });
 
@@ -303,6 +316,7 @@ export const {
   designateOwner, //
   setConsensusThreshold,
   assignUserToIssue,
+  changeUserName,
 } = scrumSlice.actions;
 
 export default scrumSlice.reducer;

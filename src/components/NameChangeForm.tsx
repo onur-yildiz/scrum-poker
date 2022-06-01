@@ -22,7 +22,7 @@ const NameChangeForm = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isEmpty) return;
-    dispatch(setName(nameInput));
+    dispatch(setName({ value: nameInput, shouldEmit: true }));
     setIsSubmitted(true);
   };
 

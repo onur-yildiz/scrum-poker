@@ -22,7 +22,7 @@ const NameSelection = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const name = data.get("username")?.toString();
-    name && dispatch(setName(name));
+    name && dispatch(setName({ value: name }));
     navigate("joinorcreate");
   };
 
