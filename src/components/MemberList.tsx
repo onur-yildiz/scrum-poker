@@ -1,5 +1,7 @@
-import { List, ListItem, Paper, Typography } from "@mui/material";
+import { Divider, List, ListItem, Paper, Typography } from "@mui/material";
 
+import AssignmentInd from "@mui/icons-material/AssignmentInd";
+import Box from "@mui/system/Box";
 import RoomStatusBar from "./RoomStatusBar";
 import StarsIcon from "@mui/icons-material/Stars";
 import VoteResultBox from "./VoteResultBox";
@@ -7,8 +9,14 @@ import { memo } from "react";
 import { useAppSelector } from "../hooks";
 
 const MemberList = memo(() => {
-  const members = useAppSelector((state) => state.scrum.room.members);
-  const roomOwnerId = useAppSelector((state) => state.scrum.room.ownerId);
+  const [members, roomOwnerId, assigneeId] = useAppSelector((state) => {
+    const room = state.scrum.room;
+    return [
+      room.members,
+      room.ownerId,
+      room.issues[room.issueIndex].assigneeId,
+    ];
+  });
 
   // create 100 length array with random names
   // let names = [];
@@ -27,7 +35,8 @@ const MemberList = memo(() => {
             <Typography sx={{ flexGrow: 1 }} noWrap>
               {member.name}
             </Typography>
-            {member.id === roomOwnerId && <StarsIcon />}
+            {member.id === assigneeId && <AssignmentInd color="primary" />}
+            {member.id === roomOwnerId && <StarsIcon color="warning" />}
           </ListItem>
         ))}
       </List>

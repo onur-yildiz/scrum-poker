@@ -5,4 +5,5 @@ interface Room {
   issues: Array<Issue>;
   scoreList: number[];
   issueIndex: number;
+  consensusThreshold: number;
 }

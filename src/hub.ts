@@ -16,6 +16,7 @@ export enum ClientMethods {
   SEND_NEXT_ROUND = "NextRound",
   SEND_SWITCH_ISSUE = "SwitchIssue",
   SEND_REMOVE_ISSUE = "RemoveIssue",
+  SEND_SET_CONSENSUS_THRESHOLD = "SetConsensusThreshold",
   // SEND_MESSAGE = "SendMessage",
 }
 
@@ -30,6 +31,8 @@ export enum HubMethods {
   RECEIVE_NEXT_ROUND = "ReceiveNextRound",
   RECEIVE_ISSUE_SWITCH = "ReceiveIssueSwitch",
   RECEIVE_OWNER_DESIGNATION = "ReceiveOwnerDesignation",
+  RECEIVE_CONSENSUS_THRESHOLD = "ReceiveConsensusThreshold",
+  RECEIVE_ASSIGNEE = "ReceiveAssignee",
   // RECEIVE_MESSAGE = "ReceiveMessage",
 }
 

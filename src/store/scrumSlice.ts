@@ -50,6 +50,9 @@ const initialState: UserState = {
         ?.split(",")
         .map((n) => parseInt(n)) ?? defaultScoreList,
     issueIndex: 0,
+    consensusThreshold: Number(
+      window.localStorage.getItem("consensusThreshold") ?? -1
+    ),
   },
   isOwner: false,
   isResultRevealed: false,
@@ -242,6 +245,35 @@ const scrumSlice = createSlice({
       if (state.user.id === action.payload) state.isOwner = true;
       state.room.ownerId = action.payload;
     },
+    setConsensusThreshold(
+      state,
+      action: PayloadAction<EmittableValue<number>>
+    ) {
+      console.debug("setConsensusThreshold");
+      state.room.consensusThreshold = action.payload.value;
+      window.localStorage.setItem(
+        "consensusThreshold",
+        action.payload.value.toString()
+      );
+
+      action.payload.shouldEmit &&
+        hub.connection.send(
+          ClientMethods.SEND_SET_CONSENSUS_THRESHOLD,
+          state.room.id,
+          state.user.id,
+          action.payload.value
+        );
+    },
+    assignUserToIssue(
+      state,
+      action: PayloadAction<{ issueId: string; assigneeId: string }>
+    ) {
+      const issue = state.room.issues.find(
+        (issue) => issue.id === action.payload.issueId
+      );
+      if (!issue) return;
+      issue.assigneeId = action.payload.assigneeId;
+    },
   },
 });
 
@@ -269,6 +301,8 @@ export const {
   leaveRoom, //
   removeUser, //
   designateOwner, //
+  setConsensusThreshold,
+  assignUserToIssue,
 } = scrumSlice.actions;
 
 export default scrumSlice.reducer;

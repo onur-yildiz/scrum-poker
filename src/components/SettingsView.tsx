@@ -1,5 +1,7 @@
 import Box from "@mui/material/Box";
 import CardValuesForm from "./CardValuesForm";
+import ConsensusThresholdForm from "./ConsensusThresholdForm";
+import { Fragment } from "react";
 import NameChangeForm from "./NameChangeForm";
 import { useAppSelector } from "../hooks";
 
@@ -9,7 +11,12 @@ const SettingsView = () => {
   return (
     <Box className="scrum-screen-view">
       <NameChangeForm />
-      {isOwner && <CardValuesForm />}
+      {isOwner && (
+        <Fragment>
+          <ConsensusThresholdForm />
+          <CardValuesForm />
+        </Fragment>
+      )}
     </Box>
   );
 };

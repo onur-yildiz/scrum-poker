@@ -2,6 +2,7 @@ import "./App.css";
 
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import {
+  assignUserToIssue,
   designateOwner,
   loadRoom,
   newIssue,
@@ -11,6 +12,7 @@ import {
   nextRound,
   removeUser,
   revealResult,
+  setConsensusThreshold,
   switchIssue,
 } from "./store/scrumSlice";
 import hub, { HubMethods } from "./hub";
@@ -84,6 +86,18 @@ function App() {
           console.debug("Next round");
           dispatch(nextRound({ value: null }));
         });
+        conn.on(HubMethods.RECEIVE_CONSENSUS_THRESHOLD, (threshold: number) => {
+          console.debug("Consensus threshold ", threshold);
+          dispatch(setConsensusThreshold({ value: threshold }));
+        });
+        conn.on(
+          HubMethods.RECEIVE_ASSIGNEE,
+          (issueId: string, assigneeId: string) => {
+            console.debug("Assignee ", issueId, assigneeId);
+            dispatch(assignUserToIssue({ issueId, assigneeId }));
+          }
+        );
+
         isListening = true;
         console.debug("Listening to hub");
       } catch (err) {
