@@ -1,5 +1,4 @@
 import { createRoom, joinRoom } from "../store/scrumSlice";
-import { useAppDispatch } from "../hooks";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Box from "@mui/material/Box/Box";
@@ -10,6 +9,7 @@ import Stack from "@mui/material/Stack";
 import StartWrapper from "./StartWrapper";
 import TextField from "@mui/material/TextField/TextField";
 import Typography from "@mui/material/Typography/Typography";
+import { useAppDispatch } from "../hooks";
 import { useTheme } from "@mui/system";
 import { v5 } from "uuid";
 
@@ -24,9 +24,7 @@ const JoinOrCreate = () => {
     const data = new FormData(event.currentTarget);
 
     const newRoomId = data.get("room-id")?.toString();
-    if (!newRoomId) return;
-
-    roomId && dispatch(joinRoom(newRoomId));
+    newRoomId && dispatch(joinRoom(newRoomId));
   };
 
   const handleCreate = () => {
