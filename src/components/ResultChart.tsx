@@ -37,6 +37,7 @@ const colors = [
 ];
 interface ResultChartProps {
   issue: Issue;
+  hideRoundAverage?: boolean;
 }
 
 ChartJS.register(
@@ -113,12 +114,15 @@ const ResultChart = (props: PropsWithChildren<ResultChartProps>) => {
         maxWidth: "55vw",
       }}
     >
-      <Typography variant="subtitle2" display="inline" sx={{ mr: 2 }}>
-        Round Average: {roundAverage.toFixed(2)}
-      </Typography>
+      {!props.hideRoundAverage && (
+        <Typography variant="subtitle2" display="inline" sx={{ mr: 2 }}>
+          Round Average: {roundAverage.toFixed(2)}
+        </Typography>
+      )}
       <Typography variant="subtitle2" display="inline">
         Cumulative Average: {cumulativeAverage.toFixed(2)}
       </Typography>
+
       <Bar options={options} data={data} />
     </Box>
   );

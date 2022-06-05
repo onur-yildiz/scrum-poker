@@ -113,7 +113,7 @@ const IssueListItem = (props: PropsWithChildren<IssueRowProps>) => {
           {props.issue.description}
         </Typography>
         {props.issue.rounds[0].votes.length > 0 && (
-          <ResultChart issue={props.issue} />
+          <ResultChart issue={props.issue} hideRoundAverage />
         )}
       </Collapse>
     </Fragment>
