@@ -94,10 +94,12 @@ const IssueListItem = (props: PropsWithChildren<IssueRowProps>) => {
           <IconButton
             sx={{ marginLeft: "auto" }}
             onClick={handleRemove}
+            disabled={issuesLength === 1}
             edge="end"
             aria-label="delete"
+            color="error"
           >
-            <Delete color="error" />
+            <Delete />
           </IconButton>
         )}
       </ListItem>
