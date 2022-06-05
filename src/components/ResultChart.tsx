@@ -70,23 +70,10 @@ const options = {
 };
 
 const ResultChart = (props: PropsWithChildren<ResultChartProps>) => {
-  // const theme = useTheme();
-  // const rounds = useAppSelector((state) => {
-  //   const room = state.scrum.room;
-  //   const issue = room.issues[room.issueIndex];
-  //   return issue.rounds;
-  // });
   const rounds = props.issue.rounds;
-  // const votes = rounds[rounds.length - 1].votes.map((vote) => vote.value);
   const votes = rounds.flatMap((round) =>
     round.votes.map((vote) => vote.value)
   );
-  // generate array of random numbers from 0 to 10 with duplicates
-  // votes = votes.concat(
-  //   Array(100 - votes.length)
-  //     .fill(0)
-  //     .map(() => Math.floor(Math.random() * 10))
-  // );
 
   const labels = Array.from(new Set(votes)).sort(); // TODO: better way
 
