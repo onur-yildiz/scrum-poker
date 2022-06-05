@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button/Button";
 import Cards from "./Cards";
+import { Fragment } from "react";
 import IssueBox from "./IssueBox";
 import ResultChart from "./ResultChart";
 import Typography from "@mui/material/Typography";
@@ -32,6 +33,20 @@ const ScrumView = () => {
     dispatch(nextRound({ value: null, shouldEmit: true }));
   };
 
+  const ResultOrCards = () =>
+    isResultRevealed ? <ResultChart issue={issue} /> : <Cards />;
+
+  const AssigneeText = () => (
+    <Fragment>
+      <Typography variant="h6" display="inline" noWrap>
+        {"Assigned to "}
+      </Typography>
+      <Typography variant="h6" display="inline" color="primary" noWrap>
+        {assigneeName}
+      </Typography>
+    </Fragment>
+  );
+
   return (
     <Box className="scrum-screen-view">
       <IssueBox />
@@ -49,17 +64,7 @@ const ScrumView = () => {
           next round
         </Button>
       )}
-      {assigneeName && (
-        <Box>
-          <Typography variant="h6" display="inline" noWrap>
-            {"Assigned to "}
-          </Typography>
-          <Typography variant="h6" display="inline" color="primary" noWrap>
-            {assigneeName}
-          </Typography>
-        </Box>
-      )}
-      {isResultRevealed ? <ResultChart issue={issue} /> : <Cards />}
+      {assigneeName ? <AssigneeText /> : <ResultOrCards />}
     </Box>
   );
 };
