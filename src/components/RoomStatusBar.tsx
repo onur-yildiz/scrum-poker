@@ -11,7 +11,6 @@ const RoomStatusBar = () => {
       const room = state.scrum.room;
       const issue = room.issues[room.issueIndex];
       return [
-        issue.title,
         issue.rounds.length,
         room.members.length,
         room.consensusThreshold,
