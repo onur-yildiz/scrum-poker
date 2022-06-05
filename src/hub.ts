@@ -30,6 +30,7 @@ export enum HubMethods {
   RECEIVE_RESULT_REVEALED = "ReceiveResultRevealed",
   RECEIVE_NEXT_ROUND = "ReceiveNextRound",
   RECEIVE_ISSUE_SWITCH = "ReceiveIssueSwitch",
+  RECEIVE_ISSUE_REMOVAL = "ReceiveIssueRemoval",
   RECEIVE_OWNER_DESIGNATION = "ReceiveOwnerDesignation",
   RECEIVE_CONSENSUS_THRESHOLD = "ReceiveConsensusThreshold",
   RECEIVE_ASSIGNEE = "ReceiveAssignee",

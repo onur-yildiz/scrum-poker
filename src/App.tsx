@@ -11,6 +11,7 @@ import {
   newScoreList,
   newVote,
   nextRound,
+  removeIssue,
   removeUser,
   revealResult,
   setConsensusThreshold,
@@ -105,6 +106,10 @@ function App() {
             dispatch(changeUserName({ userId, name }));
           }
         );
+        conn.on(HubMethods.RECEIVE_ISSUE_REMOVAL, (issueId: string) => {
+          console.debug("Issue removal ", issueId);
+          dispatch(removeIssue({ value: issueId }));
+        });
 
         isListening = true;
         console.debug("Listening to hub");
