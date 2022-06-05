@@ -143,7 +143,11 @@ const scrumSlice = createSlice({
       const index = state.room.issues.findIndex(
         (issue) => issue.id === action.payload.value
       );
-      state.room.issueIndex > index && state.room.issueIndex--;
+
+      state.room.issueIndex >= index &&
+        state.room.issueIndex !== 0 &&
+        state.room.issueIndex--;
+
       state.room.issues.splice(index, 1);
       action.payload.shouldEmit &&
         hub.connection.send(
