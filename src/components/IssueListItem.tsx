@@ -21,7 +21,15 @@ interface IssueRowProps {
 const IssueListItem = (props: PropsWithChildren<IssueRowProps>) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
-  const isOwner = useAppSelector((state) => state.scrum.isOwner);
+  const [isOwner, issuesLength, assigneeName] = useAppSelector((state) => {
+    const room = state.scrum.room;
+    return [
+      state.scrum.isOwner,
+      room.issues.length,
+      room.members.find((member) => member.id === props.issue.assigneeId)
+        ?.name ?? props.issue.assigneeId,
+    ];
+  });
   const [open, setOpen] = useState(false);
 
   const handleRemove = () => {
@@ -58,6 +66,19 @@ const IssueListItem = (props: PropsWithChildren<IssueRowProps>) => {
         >
           {props.issue.title}
         </Typography>
+        {assigneeName && (
+          <Typography
+            sx={{ marginRight: 2 }}
+            variant="subtitle1"
+            fontWeight="bold"
+            textAlign="left"
+            component="span"
+            color="primary"
+            noWrap
+          >
+            {assigneeName}
+          </Typography>
+        )}
         {!open && (
           <Typography
             sx={{ marginRight: "auto" }}

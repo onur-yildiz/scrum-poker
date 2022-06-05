@@ -6,15 +6,22 @@ import Button from "@mui/material/Button/Button";
 import Cards from "./Cards";
 import IssueBox from "./IssueBox";
 import ResultChart from "./ResultChart";
+import Typography from "@mui/material/Typography";
 
 const ScrumView = () => {
   const dispatch = useAppDispatch();
-  const isResultRevealed = useAppSelector(
-    (state) => state.scrum.room.isResultRevealed
-  );
-  const isOwner = useAppSelector((state) => state.scrum.isOwner);
-  const issue = useAppSelector(
-    (state) => state.scrum.room.issues[state.scrum.room.issueIndex]
+  const [isOwner, issue, isResultRevealed, assigneeName] = useAppSelector(
+    (state) => {
+      const room = state.scrum.room;
+      return [
+        state.scrum.isOwner,
+        room.issues[room.issueIndex],
+        room.isResultRevealed,
+        room.members.find(
+          (member) => member.id === room.issues[room.issueIndex].assigneeId
+        )?.name,
+      ];
+    }
   );
 
   const handleReveal = () => {
@@ -37,10 +44,20 @@ const ScrumView = () => {
           reveal result
         </Button>
       )}
-      {isOwner && isResultRevealed && (
+      {isOwner && isResultRevealed && !assigneeName && (
         <Button size="large" onClick={handleNextRound}>
           next round
         </Button>
+      )}
+      {assigneeName && (
+        <Box>
+          <Typography variant="h6" display="inline" noWrap>
+            {"Assigned to "}
+          </Typography>
+          <Typography variant="h6" display="inline" color="primary" noWrap>
+            {assigneeName}
+          </Typography>
+        </Box>
       )}
       {isResultRevealed ? <ResultChart issue={issue} /> : <Cards />}
     </Box>
