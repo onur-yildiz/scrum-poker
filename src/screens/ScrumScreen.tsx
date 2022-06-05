@@ -5,8 +5,7 @@ import { Box } from "@mui/material";
 import MemberList from "../components/MemberList";
 import NavBar from "../components/NavBar";
 import Resizable from "../components/Resizable";
-import { joinRoom } from "../store/scrumSlice";
-import { useEffect } from "react";
+import { leaveRoom } from "../store/scrumSlice";
 import { validate as validateUuid } from "uuid";
 
 const MainScreen = () => {
@@ -17,10 +16,11 @@ const MainScreen = () => {
 
   useEffect(() => {
     // if roomId is not a valid UUID, redirect to home
-    if (!roomId || !validateUuid(roomId)) navigate("/");
-    // if roomId is valid and different from the loaded roomId, leave room and join the new one
+    if (!roomId || !validateUuid(roomId)) return navigate("/");
+    // if roomId is valid and different from the loaded roomId, navigate to join screen
     else if (loadedRoomId !== roomId) {
-      dispatch(joinRoom(roomId));
+      dispatch(leaveRoom()); // in case of user already being in a room, leave it
+      return navigate(`/joinorcreate/${roomId}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
