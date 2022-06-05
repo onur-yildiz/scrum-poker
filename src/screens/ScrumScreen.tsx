@@ -1,5 +1,6 @@
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks";
+import { useEffect, useState } from "react";
 
 import { Box } from "@mui/material";
 import MemberList from "../components/MemberList";
@@ -9,6 +10,7 @@ import { leaveRoom } from "../store/scrumSlice";
 import { validate as validateUuid } from "uuid";
 
 const MainScreen = () => {
+  const [isValidated, setIsValidated] = useState(false);
   const { roomId } = useParams();
   const loadedRoomId = useAppSelector((state) => state.scrum.room.id);
   const navigate = useNavigate();
@@ -22,11 +24,16 @@ const MainScreen = () => {
       dispatch(leaveRoom()); // in case of user already being in a room, leave it
       return navigate(`/joinorcreate/${roomId}`);
     }
+
+    setIsValidated(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <Box className="full-width" sx={{ height: "100%" }}>
+    <Box
+      className="full-width"
+      sx={{ height: "100%", display: isValidated ? "initial" : "none" }}
+    >
       <NavBar />
       <Resizable className="scrum-screen-layout">
         <MemberList />
