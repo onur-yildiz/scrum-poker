@@ -33,7 +33,11 @@ const ScrumView = () => {
   };
 
   const ResultOrCards = () =>
-    isResultRevealed ? <ResultChart issue={issue} /> : <Cards />;
+    isResultRevealed || assigneeName ? (
+      <ResultChart issue={issue} />
+    ) : (
+      <Cards />
+    );
 
   const AssigneeText = () => (
     <Box>
@@ -49,21 +53,23 @@ const ScrumView = () => {
   return (
     <Box className="scrum-screen-view">
       <IssueBox />
-      {isOwner && !isResultRevealed && (
-        <Button
-          size="large"
-          onClick={handleReveal}
-          disabled={issue.rounds[issue.rounds.length - 1].votes.length === 0}
-        >
-          reveal result
-        </Button>
-      )}
-      {isOwner && isResultRevealed && !assigneeName && (
-        <Button size="large" onClick={handleNextRound}>
-          next round
-        </Button>
-      )}
-      {assigneeName ? <AssigneeText /> : <ResultOrCards />}
+      {isOwner &&
+        !assigneeName &&
+        (isResultRevealed ? (
+          <Button size="large" onClick={handleNextRound}>
+            next round
+          </Button>
+        ) : (
+          <Button
+            size="large"
+            onClick={handleReveal}
+            disabled={issue.rounds[issue.rounds.length - 1].votes.length === 0}
+          >
+            reveal result
+          </Button>
+        ))}
+      {assigneeName && <AssigneeText />}
+      <ResultOrCards />
     </Box>
   );
 };
