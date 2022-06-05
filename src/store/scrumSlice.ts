@@ -69,6 +69,7 @@ const scrumSlice = createSlice({
       window.localStorage.setItem("username", action.payload.value);
 
       state.room.id !== "" &&
+        action.payload.shouldEmit &&
         hub.connection.send(
           ClientMethods.SEND_SET_NAME,
           state.room.id,
