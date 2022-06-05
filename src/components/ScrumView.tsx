@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button/Button";
 import Cards from "./Cards";
-import { Fragment } from "react";
 import IssueBox from "./IssueBox";
 import ResultChart from "./ResultChart";
 import Typography from "@mui/material/Typography";
@@ -37,14 +36,14 @@ const ScrumView = () => {
     isResultRevealed ? <ResultChart issue={issue} /> : <Cards />;
 
   const AssigneeText = () => (
-    <Fragment>
+    <Box>
       <Typography variant="h6" display="inline" noWrap>
         {"Assigned to "}
       </Typography>
       <Typography variant="h6" display="inline" color="primary" noWrap>
         {assigneeName}
       </Typography>
-    </Fragment>
+    </Box>
   );
 
   return (
