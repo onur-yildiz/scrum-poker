@@ -22,14 +22,16 @@ const JoinOrCreate = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const roomId = data.get("room-id")?.toString();
-    roomId && dispatch(joinRoom(roomId));
+    const newRoomId = data.get("room-id")?.toString();
+    if (!newRoomId) return;
+
+    roomId && dispatch(joinRoom(newRoomId));
   };
 
   const handleCreate = () => {
-    const roomId = v5(Date.now().toString(), v5.DNS).toString();
-    dispatch(createRoom(roomId));
-    navigate(`/${roomId}`);
+    const newRoomId = v5(Date.now().toString(), v5.DNS).toString();
+    dispatch(createRoom(newRoomId));
+    navigate(`/${newRoomId}`);
   };
 
   return (
