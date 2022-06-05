@@ -14,9 +14,8 @@ import { Bar } from "react-chartjs-2";
 import { PropsWithChildren } from "react";
 
 const colors = [
+  "#3cb44b",
   "#e6194b",
-  "#3cb44b",
-  "#3cb44b",
   "#ffe119",
   "#0082c8",
   "#f58231",
