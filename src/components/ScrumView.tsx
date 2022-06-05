@@ -13,13 +13,13 @@ const ScrumView = () => {
   const [isOwner, issue, isResultRevealed, assigneeName] = useAppSelector(
     (state) => {
       const room = state.scrum.room;
+      const assigneeId = room.issues[room.issueIndex].assigneeId;
       return [
         state.scrum.isOwner,
         room.issues[room.issueIndex],
         room.isResultRevealed,
-        room.members.find(
-          (member) => member.id === room.issues[room.issueIndex].assigneeId
-        )?.name,
+        room.members.find((member) => member.id === assigneeId)?.name ??
+          assigneeId,
       ];
     }
   );
