@@ -63,7 +63,7 @@ const scrumSlice = createSlice({
   reducers: {
     setName(state, action: PayloadAction<EmittableValue<string>>) {
       state.user.name = action.payload.value;
-      const user = state.room.members.find((user) => user.id === state.user.id);
+      const user = state.room.members.find((u) => u.id === state.user.id);
       if (!user) return;
       user.name = action.payload.value;
       window.localStorage.setItem("username", action.payload.value);
@@ -272,7 +272,7 @@ const scrumSlice = createSlice({
       action: PayloadAction<{ issueId: string; assigneeId: string }>
     ) {
       const issue = state.room.issues.find(
-        (issue) => issue.id === action.payload.issueId
+        (i) => i.id === action.payload.issueId
       );
       if (!issue) return;
       issue.assigneeId = action.payload.assigneeId;
@@ -282,7 +282,7 @@ const scrumSlice = createSlice({
       action: PayloadAction<{ userId: string; name: string }>
     ) {
       const user = state.room.members.find(
-        (user) => user.id === action.payload.userId
+        (u) => u.id === action.payload.userId
       );
       if (!user) return;
       user.name = action.payload.name;
@@ -290,10 +290,10 @@ const scrumSlice = createSlice({
   },
 });
 
-const updateVotes = (votes: Vote[], newVote: Vote) => {
-  const index = votes.findIndex((v) => v.userId === newVote.userId);
-  if (index === -1) votes.push(newVote);
-  else votes[index].value = newVote.value;
+const updateVotes = (votes: Vote[], vote: Vote) => {
+  const index = votes.findIndex((v) => v.userId === vote.userId);
+  if (index === -1) votes.push(vote);
+  else votes[index].value = vote.value;
 };
 
 export const {
