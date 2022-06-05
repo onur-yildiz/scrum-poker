@@ -110,7 +110,7 @@ const ResultChart = (props: PropsWithChildren<ResultChartProps>) => {
     <Box
       sx={{
         width: "100%",
-        maxWidth: "1200px",
+        maxWidth: "55vw",
       }}
     >
       <Typography variant="subtitle2" display="inline" sx={{ mr: 2 }}>
