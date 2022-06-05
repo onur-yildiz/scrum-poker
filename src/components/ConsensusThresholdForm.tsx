@@ -39,9 +39,9 @@ const ConsensusThresholdForm = () => {
     <Box component="form" className="card-values-form" onSubmit={handleSubmit}>
       <TextField
         error={!isValid}
-        id="consensus-threshold-form"
-        label="Consensus Threshold"
-        name="consensus-threshold"
+        id="auto-assign-form"
+        label="Auto-assign Threshold"
+        name="auto-assign-threshold"
         value={thresholdInput}
         onChange={handleChange}
         variant="outlined"

@@ -25,9 +25,6 @@ const RoomStatusBar = () => {
         <Typography sx={{ flexGrow: 1 }} variant="h6" noWrap>
           {memberCount}
         </Typography>
-        <Typography sx={{ mr: 1 }} variant="h6" noWrap>
-          {issueTitle}
-        </Typography>
         <Numbers />
         <Typography variant="h6" noWrap>
           {roundNumber}
@@ -36,7 +33,7 @@ const RoomStatusBar = () => {
       {consensusThreshold > 2 && (
         <ListItem>
           <Typography variant="subtitle2" noWrap>
-            Consensus at {consensusThreshold} identical votes
+            Auto-assign at {consensusThreshold} identical votes
           </Typography>
         </ListItem>
       )}
