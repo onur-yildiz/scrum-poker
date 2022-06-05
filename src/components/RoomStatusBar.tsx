@@ -6,8 +6,8 @@ import Typography from "@mui/material/Typography";
 import { useAppSelector } from "../hooks";
 
 const RoomStatusBar = () => {
-  const [issueTitle, roundNumber, memberCount, consensusThreshold] =
-    useAppSelector((state) => {
+  const [roundNumber, memberCount, consensusThreshold] = useAppSelector(
+    (state) => {
       const room = state.scrum.room;
       const issue = room.issues[room.issueIndex];
       return [
@@ -16,7 +16,8 @@ const RoomStatusBar = () => {
         room.members.length,
         room.consensusThreshold,
       ];
-    });
+    }
+  );
 
   return (
     <Fragment>
