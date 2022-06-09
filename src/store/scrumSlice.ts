@@ -63,10 +63,11 @@ const scrumSlice = createSlice({
   reducers: {
     setName(state, action: PayloadAction<EmittableValue<string>>) {
       state.user.name = action.payload.value;
+      window.localStorage.setItem("username", action.payload.value);
+
       const user = state.room.members.find((u) => u.id === state.user.id);
       if (!user) return;
       user.name = action.payload.value;
-      window.localStorage.setItem("username", action.payload.value);
 
       state.room.id !== "" &&
         action.payload.shouldEmit &&
