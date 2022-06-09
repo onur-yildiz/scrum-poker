@@ -47,7 +47,7 @@ const initialState: UserState = {
       window.localStorage
         .getItem("lastUsedSet")
         ?.split(",")
-        .map((n) => parseInt(n)) ?? defaultScoreList,
+        .map((n) => Number(n)) ?? defaultScoreList,
     issueIndex: 0,
     consensusThreshold: Number(
       window.localStorage.getItem("consensusThreshold") ?? -1
