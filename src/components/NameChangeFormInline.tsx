@@ -9,9 +9,9 @@ import TextField from "@mui/material/TextField/TextField";
 import Typography from "@mui/material/Typography";
 import { setName } from "../store/scrumSlice";
 
-const NameChangeForm = () => {
-  const currentName = useAppSelector<string>((state) => state.scrum.user.name);
-  const [nameInput, setNameInput] = useState<string>(currentName);
+const NameChangeFormInline = () => {
+  const currentName = useAppSelector((state) => state.scrum.user.name);
+  const [nameInput, setNameInput] = useState(currentName);
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -64,4 +64,4 @@ const NameChangeForm = () => {
   );
 };
 
-export default NameChangeForm;
+export default NameChangeFormInline;
