@@ -65,12 +65,11 @@ const scrumSlice = createSlice({
       state.user.name = action.payload.value;
       window.localStorage.setItem("username", action.payload.value);
 
+      if (state.room.id !== "") return;
       const user = state.room.members.find((u) => u.id === state.user.id);
-      if (!user) return;
-      user.name = action.payload.value;
+      user && (user.name = action.payload.value);
 
-      state.room.id !== "" &&
-        action.payload.shouldEmit &&
+      action.payload.shouldEmit &&
         hub.connection.send(
           ClientMethods.SEND_SET_NAME,
           state.room.id,
@@ -241,7 +240,8 @@ const scrumSlice = createSlice({
         state.room.id,
         state.user.id
       );
-      return initialState;
+      state.room = initialState.room;
+      state.isOwner = false;
     },
     removeUser(state, action: PayloadAction<string>) {
       console.debug("removeUser");
