@@ -1,7 +1,8 @@
+import { PropsWithChildren, useContext } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 
+import HubContext from "../store/hubContext";
 import { Paper } from "@mui/material";
-import { PropsWithChildren } from "react";
 import { castVote } from "../store/scrumSlice";
 import { useTheme } from "@mui/system";
 
@@ -11,6 +12,7 @@ interface OutlinedCardProps {
 }
 
 const ScoreCard = (props: PropsWithChildren<OutlinedCardProps>) => {
+  const hub = useContext(HubContext);
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.scrum.user);
@@ -25,13 +27,16 @@ const ScoreCard = (props: PropsWithChildren<OutlinedCardProps>) => {
   const handleVote = () => {
     dispatch(
       castVote({
-        roomId: roomId,
-        vote: {
-          issueId: issueId,
-          value: parseFloat(props.value),
-          userId: user.id,
-          userName: user.name!,
+        value: {
+          roomId: roomId,
+          vote: {
+            issueId: issueId,
+            value: parseFloat(props.value),
+            userId: user.id,
+            userName: user.name,
+          },
         },
+        connection: hub.connection,
       })
     );
   };

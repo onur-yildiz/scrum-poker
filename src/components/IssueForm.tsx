@@ -1,13 +1,15 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 
 import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
+import HubContext from "../store/hubContext";
 import TextField from "@mui/material/TextField/TextField";
 import { newIssue } from "../store/scrumSlice";
 import { v4 } from "uuid";
 
 const IssueForm = () => {
+  const hub = useContext(HubContext);
   const [issueTitle, setIssueTitle] = useState("");
   const [issueDescription, setIssueDescription] = useState("");
   const dispatch = useAppDispatch();
@@ -29,7 +31,7 @@ const IssueForm = () => {
           : `No description provided.`,
       rounds: [{ votes: [] }],
     };
-    dispatch(newIssue({ value: issue, shouldEmit: true }));
+    dispatch(newIssue({ value: issue, connection: hub.connection }));
     setIssueDescription("");
     setIssueTitle("");
   };

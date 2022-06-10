@@ -1,10 +1,11 @@
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar/AppBar";
 import { Button } from "@mui/material";
 import ExitToApp from "@mui/icons-material/ExitToApp";
+import HubContext from "../store/hubContext";
 import IconButton from "@mui/material/IconButton";
 import Tab from "@mui/material/Tab/Tab";
 import Tabs from "@mui/material/Tabs";
@@ -13,6 +14,7 @@ import Typography from "@mui/material/Typography/Typography";
 import { leaveRoom } from "../store/scrumSlice";
 
 const NavBar = () => {
+  const hub = useContext(HubContext);
   const { roomId } = useParams();
   const dispatch = useAppDispatch();
   const userName = useAppSelector((state) => state.scrum.user.name);
@@ -28,7 +30,7 @@ const NavBar = () => {
   }, [location.pathname, roomId]);
 
   const handleSignOut = () => {
-    dispatch(leaveRoom());
+    dispatch(leaveRoom(hub.connection));
     navigate("/");
   };
 

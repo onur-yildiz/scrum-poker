@@ -1,14 +1,16 @@
-import { BaseSyntheticEvent, FormEvent, useState } from "react";
+import { BaseSyntheticEvent, FormEvent, useContext, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 
 import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
 import CheckCircle from "@mui/icons-material/CheckCircle";
+import HubContext from "../store/hubContext";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField/TextField";
 import { setConsensusThreshold } from "../store/scrumSlice";
 
 const ConsensusThresholdForm = () => {
+  const hub = useContext(HubContext);
   const currentThreshold = useAppSelector(
     (state) => state.scrum.room.consensusThreshold
   );
@@ -30,7 +32,10 @@ const ConsensusThresholdForm = () => {
     e.preventDefault();
     if (isEmpty) return;
     dispatch(
-      setConsensusThreshold({ value: Number(thresholdInput), shouldEmit: true })
+      setConsensusThreshold({
+        value: Number(thresholdInput),
+        connection: hub.connection,
+      })
     );
     setIsSubmitted(true);
   };

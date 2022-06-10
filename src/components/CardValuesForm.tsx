@@ -1,10 +1,11 @@
-import { BaseSyntheticEvent, FormEvent, useState } from "react";
+import { BaseSyntheticEvent, FormEvent, useContext, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 
 import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
 import CardValuesPresetList from "./CardValuesPresetList";
 import CheckCircle from "@mui/icons-material/CheckCircle";
+import HubContext from "../store/hubContext";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField/TextField";
 import { setScoreList } from "../store/scrumSlice";
@@ -16,6 +17,7 @@ const presets = [
 ];
 
 const CardValuesForm = () => {
+  const hub = useContext(HubContext);
   let isValid = true;
   const currentScoreList = useAppSelector((state) =>
     state.scrum.room.scoreList.join(", ")
@@ -34,12 +36,12 @@ const CardValuesForm = () => {
     const cardValues = scoreListInput
       .split(",")
       .map((item) => Number(item.trim()));
-    dispatch(setScoreList(cardValues));
+    dispatch(setScoreList({ value: cardValues, connection: hub.connection }));
     setIsSubmitted(true);
   };
 
   const handlePresetSelection = (set: number[]) => {
-    dispatch(setScoreList(set));
+    dispatch(setScoreList({ value: set, connection: hub.connection }));
     setScoreListInput(set.join(", "));
     setIsSubmitted(true);
   };

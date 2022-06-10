@@ -1,14 +1,37 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import hub, { ClientMethods } from "../hub";
+import { v5, validate } from "uuid";
 
-import { v5 } from "uuid";
+import { HubConnection } from "@microsoft/signalr";
+
+export enum ClientMethods {
+  SEND_SET_NAME = "SetName",
+  SEND_CREATE_ROOM = "CreateRoom",
+  SEND_JOIN_ROOM = "JoinRoom",
+  SEND_LEAVE_ROOM = "LeaveRoom",
+  SEND_ADD_ISSUE = "AddIssue",
+  SEND_CAST_VOTE = "CastVote",
+  SEND_SET_SCORE_LIST = "SetScoreList",
+  SEND_REVEAL_RESULT = "RevealResult",
+  SEND_NEXT_ROUND = "NextRound",
+  SEND_SWITCH_ISSUE = "SwitchIssue",
+  SEND_REMOVE_ISSUE = "RemoveIssue",
+  SEND_SET_CONSENSUS_THRESHOLD = "SetConsensusThreshold",
+  // SEND_MESSAGE = "SendMessage",
+}
 
 const defaultScoreList = [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100];
 
 interface EmittableValue<T> {
   value: T;
-  shouldEmit?: boolean;
+  connection?: HubConnection;
 }
+
+interface EmittedValue<T> extends EmittableValue<T> {
+  connection: HubConnection;
+}
+
+type EmittablePayloadAction<T> = PayloadAction<EmittableValue<T>>;
+type EmittedPayloadAction<T> = PayloadAction<EmittedValue<T>>;
 
 interface UserState {
   user: User;
@@ -61,7 +84,7 @@ const scrumSlice = createSlice({
   name: "scrum",
   initialState,
   reducers: {
-    setName(state, action: PayloadAction<EmittableValue<string>>) {
+    setName(state, action: EmittablePayloadAction<string>) {
       state.user.name = action.payload.value;
       window.localStorage.setItem("username", action.payload.value);
 
@@ -69,19 +92,18 @@ const scrumSlice = createSlice({
       const user = state.room.members.find((u) => u.id === state.user.id);
       user && (user.name = action.payload.value);
 
-      action.payload.shouldEmit &&
-        hub.connection.send(
-          ClientMethods.SEND_SET_NAME,
-          state.room.id,
-          state.user.id,
-          action.payload.value
-        );
+      action.payload.connection?.send(
+        ClientMethods.SEND_SET_NAME,
+        state.room.id,
+        state.user.id,
+        action.payload.value
+      );
     },
-    createRoom(state, action: PayloadAction<string>) {
+    createRoom(state, action: EmittedPayloadAction<string>) {
       console.debug("createRoom");
       const room: Room = {
         ...state.room,
-        id: action.payload,
+        id: action.payload.value,
         ownerId: state.user.id,
       };
 
@@ -92,53 +114,52 @@ const scrumSlice = createSlice({
       state.room = room;
       state.isOwner = true;
       console.debug(room.id);
-      hub.connection.send(ClientMethods.SEND_CREATE_ROOM, room);
+      action.payload.connection.send(ClientMethods.SEND_CREATE_ROOM, room);
     },
     loadRoom(state, action: PayloadAction<Room>) {
       console.debug("loadRoom");
       state.room = action.payload;
     },
-    setScoreList(state, action: PayloadAction<number[]>) {
+    setScoreList(state, action: EmittablePayloadAction<number[]>) {
       console.debug("setScoreList");
-      if (!state.isOwner) return;
-      state.room.scoreList = action.payload;
+      state.room.scoreList = action.payload.value;
 
-      window.localStorage.setItem("lastUsedSet", action.payload.join(","));
+      if (!action.payload.connection || !state.isOwner) return;
+      window.localStorage.setItem(
+        "lastUsedSet",
+        state.room.scoreList.join(",")
+      );
       const cardSetStorage = window.localStorage.getItem("cardSetStorage");
-      let storageVal: CardSetStorage = { sets: [action.payload] };
+      let storageVal: CardSetStorage = { sets: [state.room.scoreList] };
       if (cardSetStorage) {
         storageVal = JSON.parse(cardSetStorage) as CardSetStorage;
-        storageVal.sets.push(action.payload);
+        storageVal.sets.push(action.payload.value);
         storageVal.sets.length > 3 && storageVal.sets.shift();
       }
       window.localStorage.setItem("cardSetStorage", JSON.stringify(storageVal));
 
-      hub.connection.send(
+      action.payload.connection.send(
         ClientMethods.SEND_SET_SCORE_LIST,
         state.room.id,
         state.user.id,
         action.payload
       );
     },
-    newScoreList(state, action: PayloadAction<number[]>) {
-      console.debug("loadScoreList");
-      state.room.scoreList = action.payload;
-    },
     newMember(state, action: PayloadAction<User>) {
       console.debug("newMember");
       state.room.members.push(action.payload);
     },
-    newIssue(state, action: PayloadAction<EmittableValue<Issue>>) {
+    newIssue(state, action: EmittablePayloadAction<Issue>) {
       console.debug("newIssue");
       state.room.issues.push(action.payload.value);
-      action.payload.shouldEmit &&
-        hub.connection.send(
-          ClientMethods.SEND_ADD_ISSUE,
-          state.room.id,
-          action.payload.value
-        );
+
+      action.payload.connection?.send(
+        ClientMethods.SEND_ADD_ISSUE,
+        state.room.id,
+        action.payload.value
+      );
     },
-    removeIssue(state, action: PayloadAction<EmittableValue<string>>) {
+    removeIssue(state, action: EmittablePayloadAction<string>) {
       console.debug("removeIssue");
       const index = state.room.issues.findIndex(
         (issue) => issue.id === action.payload.value
@@ -149,14 +170,14 @@ const scrumSlice = createSlice({
         state.room.issueIndex--;
 
       state.room.issues.splice(index, 1);
-      action.payload.shouldEmit &&
-        hub.connection.send(
-          ClientMethods.SEND_REMOVE_ISSUE,
-          state.room.id,
-          action.payload.value
-        );
+
+      action.payload.connection?.send(
+        ClientMethods.SEND_REMOVE_ISSUE,
+        state.room.id,
+        action.payload.value
+      );
     },
-    switchIssue(state, action: PayloadAction<EmittableValue<number>>) {
+    switchIssue(state, action: EmittablePayloadAction<number>) {
       console.debug("switchIssue");
       const index = action.payload.value;
       if (index >= state.room.issues.length || index < 0) return;
@@ -164,13 +185,12 @@ const scrumSlice = createSlice({
       state.room.isResultRevealed = false;
       state.currentVoteValue = undefined;
 
-      action.payload.shouldEmit &&
-        hub.connection.send(
-          ClientMethods.SEND_SWITCH_ISSUE,
-          state.room.id,
-          state.user.id,
-          action.payload.value
-        );
+      action.payload.connection?.send(
+        ClientMethods.SEND_SWITCH_ISSUE,
+        state.room.id,
+        state.user.id,
+        action.payload.value
+      );
     },
     newVote(state, action: PayloadAction<Vote>) {
       console.debug("newVote");
@@ -183,59 +203,63 @@ const scrumSlice = createSlice({
           action.payload
         );
     },
-    castVote(state, action: PayloadAction<{ roomId: string; vote: Vote }>) {
+    castVote(
+      state,
+      action: EmittedPayloadAction<{ roomId: string; vote: Vote }>
+    ) {
       console.debug("castVote");
+      const vote = action.payload.value.vote;
+      const roomId = action.payload.value.roomId;
       if (state.room.isResultRevealed) return;
-      const issue = state.room.issues.find(
-        (i) => i.id === action.payload.vote.issueId
-      );
+      const issue = state.room.issues.find((i) => i.id === vote.issueId);
       issue &&
         updateVotes(
           issue.rounds[issue.rounds.length - 1].votes,
-          action.payload.vote
+          action.payload.value.vote
         );
-      state.currentVoteValue = action.payload.vote.value;
-      hub.connection.send(
+      state.currentVoteValue = vote.value;
+
+      action.payload.connection.send(
         ClientMethods.SEND_CAST_VOTE,
-        action.payload.roomId,
-        action.payload.vote
+        roomId,
+        vote
       );
     },
-    revealResult(state) {
+    revealResult(state, action: PayloadAction<HubConnection | null>) {
       console.debug("revealResult");
       if (state.room.isResultRevealed) return;
       state.room.isResultRevealed = true;
       state.isOwner &&
-        hub.connection.send(
+        action.payload!.send(
           ClientMethods.SEND_REVEAL_RESULT,
           state.room.id,
           state.user.id
         );
     },
-    nextRound(state, action: PayloadAction<EmittableValue<null>>) {
+    nextRound(state, action: PayloadAction<HubConnection | null>) {
       console.debug("nextRound");
       state.room.issues[state.room.issueIndex].rounds.push({ votes: [] });
       state.room.isResultRevealed = false;
       state.currentVoteValue = undefined;
 
-      action.payload.shouldEmit &&
-        hub.connection.send(ClientMethods.SEND_NEXT_ROUND, state.room.id);
+      action.payload?.send(ClientMethods.SEND_NEXT_ROUND, state.room.id);
     },
-    joinRoom(state, action: PayloadAction<string>) {
+    joinRoom(state, action: EmittedPayloadAction<string | void>) {
       console.debug("joinRoom");
       if (!state.user.name || state.user.name.length === 0)
         state.user.name = `user${Date.now().toString().slice(0, 8)}`;
 
-      state.room.id = action.payload;
-      hub.connection.send(
-        ClientMethods.SEND_JOIN_ROOM,
-        action.payload,
-        state.user
-      );
+      if (action.payload.value) state.room.id = action.payload.value;
+      validate(state.room.id) &&
+        action.payload.connection.send(
+          ClientMethods.SEND_JOIN_ROOM,
+          state.room.id,
+          state.user
+        );
     },
-    leaveRoom(state) {
+    leaveRoom(state, action: PayloadAction<HubConnection>) {
       console.debug("leaveRoom");
-      hub.connection.send(
+      action.payload.send(
         ClientMethods.SEND_LEAVE_ROOM,
         state.room.id,
         state.user.id
@@ -253,10 +277,7 @@ const scrumSlice = createSlice({
       if (state.user.id === action.payload) state.isOwner = true;
       state.room.ownerId = action.payload;
     },
-    setConsensusThreshold(
-      state,
-      action: PayloadAction<EmittableValue<number>>
-    ) {
+    setConsensusThreshold(state, action: EmittablePayloadAction<number>) {
       console.debug("setConsensusThreshold");
       state.room.consensusThreshold = action.payload.value;
       window.localStorage.setItem(
@@ -264,13 +285,12 @@ const scrumSlice = createSlice({
         action.payload.value.toString()
       );
 
-      action.payload.shouldEmit &&
-        hub.connection.send(
-          ClientMethods.SEND_SET_CONSENSUS_THRESHOLD,
-          state.room.id,
-          state.user.id,
-          action.payload.value
-        );
+      action.payload.connection?.send(
+        ClientMethods.SEND_SET_CONSENSUS_THRESHOLD,
+        state.room.id,
+        state.user.id,
+        action.payload.value
+      );
     },
     assignUserToIssue(
       state,
@@ -306,7 +326,6 @@ export const {
   createRoom, //
   loadRoom, //
   setScoreList, //
-  newScoreList, //
   newMember, //
   newIssue, //
   removeIssue,

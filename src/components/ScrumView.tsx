@@ -4,11 +4,14 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button/Button";
 import Cards from "./Cards";
+import HubContext from "../store/hubContext";
 import IssueBox from "./IssueBox";
 import ResultChart from "./ResultChart";
 import Typography from "@mui/material/Typography";
+import { useContext } from "react";
 
 const ScrumView = () => {
+  const hub = useContext(HubContext);
   const dispatch = useAppDispatch();
   const [isOwner, issue, isResultRevealed, assigneeName] = useAppSelector(
     (state) => {
@@ -25,11 +28,11 @@ const ScrumView = () => {
   );
 
   const handleReveal = () => {
-    dispatch(revealResult());
+    dispatch(revealResult(hub.connection));
   };
 
   const handleNextRound = () => {
-    dispatch(nextRound({ value: null, shouldEmit: true }));
+    dispatch(nextRound(hub.connection));
   };
 
   const ResultOrCards = () =>

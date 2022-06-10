@@ -5,10 +5,13 @@ import Button from "@mui/material/Button/Button";
 import Card from "@mui/material/Card/Card";
 import CardActions from "@mui/material/CardActions/CardActions";
 import CardContent from "@mui/material/CardContent/CardContent";
+import HubContext from "../store/hubContext";
 import Typography from "@mui/material/Typography/Typography";
+import { useContext } from "react";
 import { v4 } from "uuid";
 
 const IssueBox = () => {
+  const hub = useContext(HubContext);
   const dispatch = useAppDispatch();
   const [issueTitle, issueDesc, issueIndex, isOwner, issuesLength, userId] =
     useAppSelector((state) => {
@@ -26,7 +29,10 @@ const IssueBox = () => {
 
   const handleIssueSwitch = (next: boolean) => {
     dispatch(
-      switchIssue({ value: issueIndex + (next ? 1 : -1), shouldEmit: true })
+      switchIssue({
+        value: issueIndex + (next ? 1 : -1),
+        connection: hub.connection,
+      })
     );
   };
 
@@ -40,7 +46,7 @@ const IssueBox = () => {
           description: "No description provided.",
           rounds: [{ votes: [] }],
         },
-        shouldEmit: true,
+        connection: hub.connection,
       })
     );
     handleIssueSwitch(true);

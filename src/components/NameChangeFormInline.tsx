@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField/TextField";
 import Typography from "@mui/material/Typography";
 import { setName } from "../store/scrumSlice";
 
-const NameChangeFormInline = () => {
+const NameChangeFormInline = (props: { disabled: boolean }) => {
   const currentName = useAppSelector((state) => state.scrum.user.name);
   const [nameInput, setNameInput] = useState(currentName);
   const [isEditing, setIsEditing] = useState(false);
@@ -45,8 +45,13 @@ const NameChangeFormInline = () => {
             variant="standard"
             fullWidth
             inputProps={{ "aria-label": "name change" }}
+            disabled={props.disabled}
           />
-          <IconButton type="submit" aria-label="change">
+          <IconButton
+            type="submit"
+            aria-label="change"
+            disabled={props.disabled}
+          >
             <Check />
           </IconButton>
         </Stack>
@@ -55,7 +60,11 @@ const NameChangeFormInline = () => {
           <Typography variant="h6" color="primary">
             {currentName}
           </Typography>
-          <IconButton onClick={() => setIsEditing(true)} size="small">
+          <IconButton
+            onClick={() => setIsEditing(true)}
+            size="small"
+            disabled={props.disabled}
+          >
             <Edit />
           </IconButton>
         </Stack>

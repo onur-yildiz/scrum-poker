@@ -1,9 +1,10 @@
-import { Fragment, PropsWithChildren, useState } from "react";
+import { Fragment, PropsWithChildren, useContext, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 
 import Collapse from "@mui/material/Collapse";
 import Delete from "@mui/icons-material/Delete";
 import { Divider } from "@mui/material";
+import HubContext from "../store/hubContext";
 import IconButton from "@mui/material/IconButton";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
@@ -19,6 +20,7 @@ interface IssueRowProps {
 }
 
 const IssueListItem = (props: PropsWithChildren<IssueRowProps>) => {
+  const hub = useContext(HubContext);
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const [isOwner, issuesLength, assigneeName] = useAppSelector((state) => {
@@ -33,7 +35,9 @@ const IssueListItem = (props: PropsWithChildren<IssueRowProps>) => {
   const [open, setOpen] = useState(false);
 
   const handleRemove = () => {
-    dispatch(removeIssue({ value: props.issue.id, shouldEmit: true }));
+    dispatch(
+      removeIssue({ value: props.issue.id, connection: hub.connection })
+    );
   };
 
   return (

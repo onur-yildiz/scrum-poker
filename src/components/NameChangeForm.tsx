@@ -1,14 +1,16 @@
-import { BaseSyntheticEvent, FormEvent, useState } from "react";
+import { BaseSyntheticEvent, FormEvent, useContext, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 
 import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
 import CheckCircle from "@mui/icons-material/CheckCircle";
+import HubContext from "../store/hubContext";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField/TextField";
 import { setName } from "../store/scrumSlice";
 
 const NameChangeForm = () => {
+  const hub = useContext(HubContext);
   const currentName = useAppSelector<string>((state) => state.scrum.user.name);
   const [nameInput, setNameInput] = useState<string>(currentName);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -22,7 +24,7 @@ const NameChangeForm = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isEmpty) return;
-    dispatch(setName({ value: nameInput, shouldEmit: true }));
+    dispatch(setName({ value: nameInput, connection: hub.connection }));
     setIsSubmitted(true);
   };
 

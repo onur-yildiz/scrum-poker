@@ -1,8 +1,9 @@
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Box } from "@mui/material";
+import HubContext from "../store/hubContext";
 import MemberList from "../components/MemberList";
 import NavBar from "../components/NavBar";
 import Resizable from "../components/Resizable";
@@ -10,6 +11,7 @@ import { leaveRoom } from "../store/scrumSlice";
 import { validate as validateUuid } from "uuid";
 
 const MainScreen = () => {
+  const hub = useContext(HubContext);
   const [isValidated, setIsValidated] = useState(false);
   const { roomId } = useParams();
   const loadedRoomId = useAppSelector((state) => state.scrum.room.id);
@@ -21,7 +23,7 @@ const MainScreen = () => {
     if (!roomId || !validateUuid(roomId)) return navigate("/");
     // if roomId is valid and different from the loaded roomId, navigate to join screen
     else if (loadedRoomId !== roomId) {
-      dispatch(leaveRoom()); // in case of user already being in a room, leave it
+      dispatch(leaveRoom(hub.connection)); // in case of user already being in a room, leave it
       return navigate(`/joinorcreate/${roomId}`);
     }
 
