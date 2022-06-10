@@ -35,13 +35,6 @@ const ScrumView = () => {
     dispatch(nextRound(hub.connection));
   };
 
-  const ResultOrCards = () =>
-    isResultRevealed || assigneeName ? (
-      <ResultChart issue={issue} />
-    ) : (
-      <Cards />
-    );
-
   const AssigneeText = () => (
     <Box>
       <Typography variant="h6" display="inline" noWrap>
@@ -72,7 +65,11 @@ const ScrumView = () => {
           </Button>
         ))}
       {assigneeName && <AssigneeText />}
-      <ResultOrCards />
+      {isResultRevealed || assigneeName ? (
+        <ResultChart issue={issue} />
+      ) : (
+        <Cards />
+      )}
     </Box>
   );
 };

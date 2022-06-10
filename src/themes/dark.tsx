@@ -1,33 +1,27 @@
 import { createTheme } from "@mui/material/styles";
+import grey from "@mui/material/colors/grey";
 
-// declare module "@mui/material/styles" {
-//   // interface Theme {
-//   //   status: {
-//   //     danger: React.CSSProperties["color"];
-//   //   };
-//   // }
-//   //   interface Palette {
-//   //     neutral: Palette["primary"];
-//   //   }
-//   //   interface PaletteOptions {
-//   //     neutral: PaletteOptions["primary"];
-//   //   }
-//   //   interface PaletteColor {
-//   //     darker?: string;
-//   //   }
-//   //   interface SimplePaletteColorOptions {
-//   //     darker?: string;
-//   //   }
-//   // interface ThemeOptions {
-//   //   status: {
-//   //     danger: React.CSSProperties["color"];
-//   //   };
-//   // }
-// }
-
-const darkTheme = createTheme({
+let darkTheme = createTheme({
   palette: {
     mode: "dark",
+    primary: {
+      main: "#77ab2d",
+      dark: "#5e9214",
+      light: "#95be5c",
+    },
+    secondary: {
+      main: grey[300],
+      dark: grey[500],
+      light: grey[100],
+    },
+    background: {
+      default: grey[800],
+      paper: grey[900],
+    },
+    text: {
+      // primary: blueGrey[800],
+      // secondary: blueGrey[600],
+    },
   },
 });
 

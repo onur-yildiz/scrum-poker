@@ -1,10 +1,11 @@
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
-
+import appSettingsReducer from "./appSettingsSlice";
+import { configureStore } from "@reduxjs/toolkit";
 import scrumReducer from "./scrumSlice";
 
 const store = configureStore({
   reducer: {
     scrum: scrumReducer,
+    appSettings: appSettingsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),

@@ -12,6 +12,7 @@ import { Box, Typography } from "@mui/material";
 
 import { Bar } from "react-chartjs-2";
 import { PropsWithChildren } from "react";
+import { grey } from "@mui/material/colors";
 
 const colors = [
   "#3cb44b",
@@ -48,6 +49,10 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
+const d = ChartJS.defaults;
+d.color = grey[500];
+d.borderColor = grey[500];
 
 const options = {
   responsive: true,
