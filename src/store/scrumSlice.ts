@@ -88,7 +88,7 @@ const scrumSlice = createSlice({
       state.user.name = action.payload.value;
       window.localStorage.setItem("username", action.payload.value);
 
-      if (state.room.id !== "") return;
+      if (state.room.id === "") return;
       const user = state.room.members.find((u) => u.id === state.user.id);
       user && (user.name = action.payload.value);
 
