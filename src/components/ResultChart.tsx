@@ -80,7 +80,7 @@ const ResultChart = (props: PropsWithChildren<ResultChartProps>) => {
     round.votes.map((vote) => vote.value)
   );
 
-  const labels = Array.from(new Set(votes)).sort(); // TODO: better way
+  const labels = Array.from(new Set(votes)).sort((a, b) => a - b);
 
   const data: ChartData<"bar", any, any> = {
     labels,
