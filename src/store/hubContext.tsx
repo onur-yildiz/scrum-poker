@@ -133,9 +133,14 @@ export const HubContextProdiver = (props: any) => {
     c.on(HubMethods.RECEIVE_CONSENSUS_THRESHOLD, (threshold: number) => {
       console.debug("Consensus threshold ", threshold);
       dispatch(setConsensusThreshold({ value: threshold }));
-      enqueueSnackbar(`Assign threshold is set to ${threshold} `, {
-        variant: "info",
-      });
+      enqueueSnackbar(
+        threshold > 0
+          ? `Auto-assign threshold is set to ${threshold}`
+          : "Auto-assign threshold is removed",
+        {
+          variant: "info",
+        }
+      );
     });
     c.on(HubMethods.RECEIVE_ASSIGNEE, (issueId: string, assigneeId: string) => {
       console.debug("Assignee ", issueId, assigneeId);
