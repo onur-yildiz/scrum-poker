@@ -104,7 +104,7 @@ const CardValuesForm = () => {
         disableElevation
         type="submit"
       >
-        change values
+        set
       </Button>
       <CardValuesPresetList
         title="Presets"
