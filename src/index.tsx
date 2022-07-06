@@ -6,6 +6,7 @@ import { HubContextProdiver } from "./store/hubContext";
 import { Provider } from "react-redux";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { SnackbarProvider } from "notistack";
 import reportWebVitals from "./reportWebVitals";
 import store from "./store/store";
 
@@ -15,11 +16,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Provider store={store}>
-        <HubContextProdiver>
-          <App />
-        </HubContextProdiver>
-      </Provider>
+      <SnackbarProvider maxSnack={3} autoHideDuration={2000}>
+        <Provider store={store}>
+          <HubContextProdiver>
+            <App />
+          </HubContextProdiver>
+        </Provider>
+      </SnackbarProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

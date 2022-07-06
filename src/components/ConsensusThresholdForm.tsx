@@ -100,9 +100,7 @@ const ConsensusThresholdForm = () => {
         message={notification.message}
         severity="success"
         open={notification.open}
-        onClose={() => {
-          setNotification((prev) => ({ ...prev, open: false }));
-        }}
+        onClose={() => setNotification((prev) => ({ ...prev, open: false }))}
       />
     </Box>
   );

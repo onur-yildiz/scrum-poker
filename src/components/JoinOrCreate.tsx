@@ -3,13 +3,12 @@ import { createRoom, joinRoom } from "../store/scrumSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { v5, validate } from "uuid";
 
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import HubContext from "../store/hubContext";
 import NameChangeFormInline from "./NameChangeFormInline";
-import Snackbar from "@mui/material/Snackbar";
+import Notification from "./Notification";
 import Stack from "@mui/material/Stack";
 import StartWrapper from "./StartWrapper";
 import TextField from "@mui/material/TextField/TextField";
@@ -96,15 +95,12 @@ const JoinOrCreate = () => {
         >
           Create Room
         </Button>
-        <Snackbar
+        <Notification
+          message="Invalid Room ID"
+          severity="error"
           open={open}
-          autoHideDuration={2000}
           onClose={() => setOpen(false)}
-        >
-          <Alert variant="filled" severity="error">
-            Invalid Room ID
-          </Alert>
-        </Snackbar>
+        />
       </Stack>
     </StartWrapper>
   );

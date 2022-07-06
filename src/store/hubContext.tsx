@@ -25,10 +25,9 @@ import {
 } from "./scrumSlice";
 import { createContext, useEffect, useState } from "react";
 
-import Alert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
 import { useAppDispatch } from "../hooks";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 export enum HubMethods {
   RECEIVE_MEMBER = "ReceiveMember",
@@ -74,9 +73,9 @@ let isListening = false;
 export const HubContextProdiver = (props: any) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const connection = initialState.connection;
   const [isConnected, setIsConnected] = useState(initialState.isConnected);
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (isListening) return;
@@ -84,10 +83,12 @@ export const HubContextProdiver = (props: any) => {
     c.on(HubMethods.RECEIVE_MEMBER, (user: User) => {
       console.debug("New member ", user);
       dispatch(newMember(user));
+      enqueueSnackbar(`${user.name} has joined`, { variant: "info" });
     });
     c.on(HubMethods.RECEIVE_ISSUE, (issue: Issue) => {
       console.debug("Received issue ", issue);
       dispatch(newIssue({ value: issue }));
+      enqueueSnackbar(`New Issue: ${issue.title}`, { variant: "info" });
     });
     c.on(HubMethods.RECEIVE_VOTE, (vote: Vote) => {
       console.debug("Received vote ", vote);
@@ -96,6 +97,7 @@ export const HubContextProdiver = (props: any) => {
     c.on(HubMethods.RECEIVE_SCORE_LIST, (scoreList: number[]) => {
       console.debug("Received score list ", scoreList);
       dispatch(setScoreList({ value: scoreList }));
+      enqueueSnackbar(`Card values has changed`, { variant: "info" });
     });
     c.on(HubMethods.RECEIVE_ROOM_ACCEPTION, (room: Room) => {
       console.debug("Accepted in ", room);
@@ -106,7 +108,7 @@ export const HubContextProdiver = (props: any) => {
       console.debug("Room not existing ", roomId);
       dispatch(resetRoomState(roomId));
       navigate(-1);
-      setOpen(true);
+      enqueueSnackbar(`Room does not exist`, { variant: "error" });
     });
     c.on(HubMethods.RECEIVE_USER_LEFT, (userId: string) => {
       console.debug("User left ", userId);
@@ -131,6 +133,9 @@ export const HubContextProdiver = (props: any) => {
     c.on(HubMethods.RECEIVE_CONSENSUS_THRESHOLD, (threshold: number) => {
       console.debug("Consensus threshold ", threshold);
       dispatch(setConsensusThreshold({ value: threshold }));
+      enqueueSnackbar(`Assign threshold is set to ${threshold} `, {
+        variant: "info",
+      });
     });
     c.on(HubMethods.RECEIVE_ASSIGNEE, (issueId: string, assigneeId: string) => {
       console.debug("Assignee ", issueId, assigneeId);
@@ -178,15 +183,6 @@ export const HubContextProdiver = (props: any) => {
   return (
     <HubContext.Provider value={{ connection, isConnected }}>
       {props.children}
-      <Snackbar
-        open={open}
-        onClose={() => setOpen(false)}
-        autoHideDuration={2000}
-      >
-        <Alert variant="filled" severity="error">
-          Room does not exist
-        </Alert>
-      </Snackbar>
     </HubContext.Provider>
   );
 };

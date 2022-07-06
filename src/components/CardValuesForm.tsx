@@ -126,9 +126,7 @@ const CardValuesForm = () => {
         message={notification.message}
         severity={notification.severity}
         open={notification.open}
-        onClose={() => {
-          setNotification((prev) => ({ ...prev, open: false }));
-        }}
+        onClose={() => setNotification((prev) => ({ ...prev, open: false }))}
       />
     </Box>
   );
