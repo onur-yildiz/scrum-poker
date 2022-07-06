@@ -1,19 +1,21 @@
-import { FormEvent, useContext } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { createRoom, joinRoom } from "../store/scrumSlice";
 import { useNavigate, useParams } from "react-router-dom";
+import { v5, validate } from "uuid";
 
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import HubContext from "../store/hubContext";
 import NameChangeFormInline from "./NameChangeFormInline";
+import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import StartWrapper from "./StartWrapper";
 import TextField from "@mui/material/TextField/TextField";
 import Typography from "@mui/material/Typography/Typography";
 import { useAppDispatch } from "../hooks";
 import { useTheme } from "@mui/system";
-import { v5 } from "uuid";
 
 const JoinOrCreate = () => {
   const hub = useContext(HubContext);
@@ -21,20 +23,32 @@ const JoinOrCreate = () => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [inputRoomId, setInputRoomId] = useState<string>(roomId ?? "");
+  const [open, setOpen] = useState(false);
 
   const handleJoin = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
 
-    const newRoomId = data.get("room-id")?.toString();
-    newRoomId &&
-      dispatch(joinRoom({ value: newRoomId, connection: hub.connection }));
+    if (inputRoomId === "") return;
+    if (validate(inputRoomId))
+      dispatch(joinRoom({ value: inputRoomId, connection: hub.connection }));
+    else setOpen(true);
   };
 
   const handleCreate = () => {
     const newRoomId = v5(Date.now().toString(), v5.DNS).toString();
     dispatch(createRoom({ value: newRoomId, connection: hub.connection }));
     navigate(`/${newRoomId}`);
+  };
+
+  const handleRoomIdChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const regex = /\/([a-z0-9_-]*[/]?)$/;
+    let input = event.target.value;
+    const parsedValue = regex.exec(input)?.[1];
+    if (parsedValue) input = parsedValue;
+    setInputRoomId(input);
   };
 
   const disabled = !hub.isConnected;
@@ -47,11 +61,12 @@ const JoinOrCreate = () => {
             margin="normal"
             fullWidth
             id="room-id"
-            label="Room ID"
+            label="Room ID or URL"
             name="room-id"
             autoComplete="room-id"
             autoFocus
-            defaultValue={roomId}
+            value={inputRoomId}
+            onChange={handleRoomIdChange}
             disabled={disabled}
           />
           <Button
@@ -81,6 +96,15 @@ const JoinOrCreate = () => {
         >
           Create Room
         </Button>
+        <Snackbar
+          open={open}
+          autoHideDuration={2000}
+          onClose={() => setOpen(false)}
+        >
+          <Alert variant="filled" severity="error">
+            Invalid Room ID
+          </Alert>
+        </Snackbar>
       </Stack>
     </StartWrapper>
   );
