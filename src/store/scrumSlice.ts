@@ -144,7 +144,7 @@ const scrumSlice = createSlice({
         ClientMethods.SEND_SET_SCORE_LIST,
         state.room.id,
         state.user.id,
-        action.payload
+        action.payload.value
       );
     },
     newMember(state, action: PayloadAction<User>) {
