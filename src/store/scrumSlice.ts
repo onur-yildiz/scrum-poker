@@ -267,6 +267,11 @@ const scrumSlice = createSlice({
       state.room = initialState.room;
       state.isOwner = false;
     },
+    resetRoomState(state, action: PayloadAction<string>) {
+      if (state.room.id !== action.payload) return;
+      state.room = initialState.room;
+      state.isOwner = false;
+    },
     removeUser(state, action: PayloadAction<string>) {
       console.debug("removeUser");
       state.room.members = state.room.members.filter(
@@ -336,6 +341,7 @@ export const {
   nextRound, //
   joinRoom, //
   leaveRoom, //
+  resetRoomState,
   removeUser, //
   designateOwner, //
   setConsensusThreshold,

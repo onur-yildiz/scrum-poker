@@ -17,6 +17,7 @@ import {
   nextRound,
   removeIssue,
   removeUser,
+  resetRoomState,
   revealResult,
   setConsensusThreshold,
   setScoreList,
@@ -24,6 +25,8 @@ import {
 } from "./scrumSlice";
 import { createContext, useEffect, useState } from "react";
 
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 import { useAppDispatch } from "../hooks";
 import { useNavigate } from "react-router-dom";
 
@@ -42,6 +45,7 @@ export enum HubMethods {
   RECEIVE_CONSENSUS_THRESHOLD = "ReceiveConsensusThreshold",
   RECEIVE_ASSIGNEE = "ReceiveAssignee",
   RECEIVE_NAME_CHANGE = "ReceiveNameChange",
+  RECEIVE_ROOM_NOT_EXISTING = "ReceiveRoomNotExisting",
   // RECEIVE_MESSAGE = "ReceiveMessage",
 }
 
@@ -72,6 +76,7 @@ export const HubContextProdiver = (props: any) => {
   const navigate = useNavigate();
   const connection = initialState.connection;
   const [isConnected, setIsConnected] = useState(initialState.isConnected);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (isListening) return;
@@ -96,6 +101,12 @@ export const HubContextProdiver = (props: any) => {
       console.debug("Accepted in ", room);
       dispatch(loadRoom(room));
       navigate(`/${room.id}`);
+    });
+    c.on(HubMethods.RECEIVE_ROOM_NOT_EXISTING, (roomId: string) => {
+      console.debug("Room not existing ", roomId);
+      dispatch(resetRoomState(roomId));
+      navigate(-1);
+      setOpen(true);
     });
     c.on(HubMethods.RECEIVE_USER_LEFT, (userId: string) => {
       console.debug("User left ", userId);
@@ -167,6 +178,15 @@ export const HubContextProdiver = (props: any) => {
   return (
     <HubContext.Provider value={{ connection, isConnected }}>
       {props.children}
+      <Snackbar
+        open={open}
+        onClose={() => setOpen(false)}
+        autoHideDuration={2000}
+      >
+        <Alert variant="filled" severity="error">
+          Room does not exist
+        </Alert>
+      </Snackbar>
     </HubContext.Provider>
   );
 };
