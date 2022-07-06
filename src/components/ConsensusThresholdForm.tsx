@@ -74,10 +74,9 @@ const ConsensusThresholdForm = () => {
         variant="outlined"
         helperText={!isValid ? "Value must be greater than 2" : ""}
       />
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack direction="row" spacing={2} alignItems="stretch">
         <Button
           variant="contained"
-          size="large"
           disableElevation
           type="submit"
           disabled={!isValid}
@@ -86,7 +85,6 @@ const ConsensusThresholdForm = () => {
         </Button>
         {currentThreshold >= 3 && (
           <Button
-            size="large"
             disableElevation
             color="error"
             disabled={!isValid}

@@ -7,7 +7,6 @@ import Button from "@mui/material/Button/Button";
 import CardValuesPresetList from "./CardValuesPresetList";
 import HubContext from "../store/hubContext";
 import Notification from "./Notification";
-import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField/TextField";
 import { setScoreList } from "../store/scrumSlice";
 
@@ -99,17 +98,14 @@ const CardValuesForm = () => {
         helperText={`Seperate values by comma (ex. 1,2,3,4,5)`}
         variant="outlined"
       />
-      <Stack direction="row" spacing={2} alignItems="center">
-        <Button
-          disabled={!isValid}
-          variant="contained"
-          size="large"
-          disableElevation
-          type="submit"
-        >
-          change values
-        </Button>
-      </Stack>
+      <Button
+        disabled={!isValid}
+        variant="contained"
+        disableElevation
+        type="submit"
+      >
+        change values
+      </Button>
       <CardValuesPresetList
         title="Presets"
         onClick={handlePresetSelection}

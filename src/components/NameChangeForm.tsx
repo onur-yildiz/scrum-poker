@@ -6,7 +6,6 @@ import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
 import HubContext from "../store/hubContext";
 import Notification from "./Notification";
-import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField/TextField";
 import { setName } from "../store/scrumSlice";
 
@@ -51,24 +50,21 @@ const NameChangeForm = () => {
     <Box component="form" className="card-values-form" onSubmit={handleSubmit}>
       <TextField
         id="change-username"
-        label="Change Name"
+        label="Display Name"
         name="username"
         value={nameInput}
         onChange={handleChange}
         variant="outlined"
         helperText={isEmpty ? "Name cannot be empty" : ""}
       />
-      <Stack direction="row" spacing={2} alignItems="center">
-        <Button
-          variant="contained"
-          size="large"
-          disableElevation
-          type="submit"
-          disabled={isEmpty}
-        >
-          change name
-        </Button>
-      </Stack>
+      <Button
+        variant="contained"
+        disableElevation
+        type="submit"
+        disabled={isEmpty}
+      >
+        change
+      </Button>
       <Notification
         message={notification.message}
         severity={notification.severity}
