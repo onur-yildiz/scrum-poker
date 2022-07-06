@@ -7,6 +7,7 @@ import { Button } from "@mui/material";
 import ExitToApp from "@mui/icons-material/ExitToApp";
 import HubContext from "../store/hubContext";
 import IconButton from "@mui/material/IconButton";
+import Notification from "./Notification";
 import Tab from "@mui/material/Tab/Tab";
 import Tabs from "@mui/material/Tabs";
 import Toolbar from "@mui/material/Toolbar/Toolbar";
@@ -20,13 +21,17 @@ const NavBar = () => {
   const userName = useAppSelector((state) => state.scrum.user.name);
   const navigate = useNavigate();
   const location = useLocation();
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState("0");
+  const [notification, setNotification] = useState<{
+    message: string;
+    open: boolean;
+  }>({ open: false, message: "" });
 
   useEffect(() => {
     const paths = [roomId, "issues", "settings"];
     const path = location.pathname.split("/").reverse()[0];
     const index = paths.indexOf(path);
-    setValue(index);
+    setValue(index.toString());
   }, [location.pathname, roomId]);
 
   const handleSignOut = () => {
@@ -36,6 +41,10 @@ const NavBar = () => {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(window.location.href);
+    setNotification({
+      message: "Copied to clipboard",
+      open: true,
+    });
   };
 
   return (
@@ -48,9 +57,13 @@ const NavBar = () => {
     >
       <Toolbar variant="dense">
         <Tabs value={value} selectionFollowsFocus sx={{ flexGrow: 1 }}>
-          <Tab label="Scrum" onClick={() => navigate("")} />
-          <Tab label="Issues" onClick={() => navigate("issues")} />
-          <Tab label="Settings" onClick={() => navigate("settings")} />
+          <Tab value="0" label="Scrum" onClick={() => navigate("")} />
+          <Tab value="1" label="Issues" onClick={() => navigate("issues")} />
+          <Tab
+            value="2"
+            label="Settings"
+            onClick={() => navigate("settings")}
+          />
         </Tabs>
 
         <Button onClick={handleCopy} sx={{ mr: 2 }}>
@@ -68,6 +81,14 @@ const NavBar = () => {
           <ExitToApp />
         </IconButton>
       </Toolbar>
+      <Notification
+        message={notification.message}
+        severity="success"
+        open={notification.open}
+        onClose={() => {
+          setNotification((prev) => ({ ...prev, open: false }));
+        }}
+      />
     </AppBar>
   );
 };

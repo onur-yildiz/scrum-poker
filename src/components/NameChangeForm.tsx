@@ -1,10 +1,11 @@
 import { BaseSyntheticEvent, FormEvent, useContext, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 
+import { AlertColor } from "@mui/material/Alert";
 import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
-import CheckCircle from "@mui/icons-material/CheckCircle";
 import HubContext from "../store/hubContext";
+import Notification from "./Notification";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField/TextField";
 import { setName } from "../store/scrumSlice";
@@ -13,19 +14,35 @@ const NameChangeForm = () => {
   const hub = useContext(HubContext);
   const currentName = useAppSelector<string>((state) => state.scrum.user.name);
   const [nameInput, setNameInput] = useState<string>(currentName);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [notification, setNotification] = useState<{
+    message: string;
+    open: boolean;
+    severity: AlertColor;
+  }>({ open: false, message: "", severity: "success" });
   const dispatch = useAppDispatch();
 
   const handleChange = (e: BaseSyntheticEvent) => {
     setNameInput(e.target.value);
-    setIsSubmitted(false);
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isEmpty) return;
+    if (currentName === nameInput) {
+      setNotification({
+        message: "You already have this name",
+        severity: "info",
+        open: true,
+      });
+      return;
+    }
+
     dispatch(setName({ value: nameInput, connection: hub.connection }));
-    setIsSubmitted(true);
+
+    setNotification({
+      message: "Changed name",
+      severity: "success",
+      open: true,
+    });
   };
 
   const isEmpty = nameInput?.length === 0;
@@ -51,8 +68,15 @@ const NameChangeForm = () => {
         >
           change name
         </Button>
-        {isSubmitted && <CheckCircle color="success" />}
       </Stack>
+      <Notification
+        message={notification.message}
+        severity={notification.severity}
+        open={notification.open}
+        onClose={() => {
+          setNotification((prev) => ({ ...prev, open: false }));
+        }}
+      />
     </Box>
   );
 };

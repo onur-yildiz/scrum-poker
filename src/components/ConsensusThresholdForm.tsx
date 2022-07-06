@@ -3,8 +3,8 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 
 import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
-import CheckCircle from "@mui/icons-material/CheckCircle";
 import HubContext from "../store/hubContext";
+import Notification from "./Notification";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField/TextField";
 import { setConsensusThreshold } from "../store/scrumSlice";
@@ -17,7 +17,11 @@ const ConsensusThresholdForm = () => {
   const [thresholdInput, setThresholdInput] = useState(
     currentThreshold === -1 ? "3" : currentThreshold.toString()
   );
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [notification, setNotification] = useState<{
+    message: string;
+    open: boolean;
+  }>({ open: false, message: "" });
+
   const dispatch = useAppDispatch();
 
   const isValid = Number(thresholdInput) > 2;
@@ -25,7 +29,6 @@ const ConsensusThresholdForm = () => {
 
   const handleChange = (e: BaseSyntheticEvent) => {
     setThresholdInput(e.target.value);
-    setIsSubmitted(false);
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -37,7 +40,26 @@ const ConsensusThresholdForm = () => {
         connection: hub.connection,
       })
     );
-    setIsSubmitted(true);
+
+    setNotification({
+      message: "Set consensus threshold",
+      open: true,
+    });
+  };
+
+  const handleRemoveConsensusThreshold = () => {
+    dispatch(
+      setConsensusThreshold({
+        value: -1,
+        connection: hub.connection,
+      })
+    );
+
+    setNotification({
+      message: "Removed consensus threshold",
+      open: true,
+    });
+    setThresholdInput("3");
   };
 
   return (
@@ -62,8 +84,26 @@ const ConsensusThresholdForm = () => {
         >
           set
         </Button>
-        {isSubmitted && <CheckCircle color="success" />}
+        {currentThreshold >= 3 && (
+          <Button
+            size="large"
+            disableElevation
+            color="error"
+            disabled={!isValid}
+            onClick={handleRemoveConsensusThreshold}
+          >
+            remove
+          </Button>
+        )}
       </Stack>
+      <Notification
+        message={notification.message}
+        severity="success"
+        open={notification.open}
+        onClose={() => {
+          setNotification((prev) => ({ ...prev, open: false }));
+        }}
+      />
     </Box>
   );
 };

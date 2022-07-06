@@ -1,11 +1,12 @@
 import { BaseSyntheticEvent, FormEvent, useContext, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 
+import { AlertColor } from "@mui/material/Alert";
 import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
 import CardValuesPresetList from "./CardValuesPresetList";
-import CheckCircle from "@mui/icons-material/CheckCircle";
 import HubContext from "../store/hubContext";
+import Notification from "./Notification";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField/TextField";
 import { setScoreList } from "../store/scrumSlice";
@@ -19,16 +20,21 @@ const presets = [
 const CardValuesForm = () => {
   const hub = useContext(HubContext);
   let isValid = true;
-  const currentScoreList = useAppSelector((state) =>
-    state.scrum.room.scoreList.join(", ")
+  const currentScoreList = useAppSelector(
+    (state) => state.scrum.room.scoreList
   );
-  const [scoreListInput, setScoreListInput] = useState(currentScoreList);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [scoreListInput, setScoreListInput] = useState(
+    currentScoreList.join(", ")
+  );
+  const [notification, setNotification] = useState<{
+    message: string;
+    open: boolean;
+    severity: AlertColor;
+  }>({ open: false, message: "", severity: "success" });
   const dispatch = useAppDispatch();
 
   const handleChange = (e: BaseSyntheticEvent) => {
     setScoreListInput(e.target.value);
-    setIsSubmitted(false);
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -36,14 +42,32 @@ const CardValuesForm = () => {
     const cardValues = scoreListInput
       .split(",")
       .map((item) => Number(item.trim()));
+
+    if (currentScoreList.toString() === cardValues.toString()) {
+      setNotification({
+        message: "These values are already set",
+        severity: "info",
+        open: true,
+      });
+      return;
+    }
+
     dispatch(setScoreList({ value: cardValues, connection: hub.connection }));
-    setIsSubmitted(true);
+    setNotification({
+      message: "Set new card values",
+      severity: "success",
+      open: true,
+    });
   };
 
   const handlePresetSelection = (set: number[]) => {
     dispatch(setScoreList({ value: set, connection: hub.connection }));
     setScoreListInput(set.join(", "));
-    setIsSubmitted(true);
+    setNotification({
+      message: "Set preset card values",
+      severity: "success",
+      open: true,
+    });
   };
 
   const validateScoreListInput = () => {
@@ -85,7 +109,6 @@ const CardValuesForm = () => {
         >
           change values
         </Button>
-        {isSubmitted && <CheckCircle color="success" />}
       </Stack>
       <CardValuesPresetList
         title="Presets"
@@ -99,6 +122,14 @@ const CardValuesForm = () => {
           presets={savedSets.sets}
         />
       )}
+      <Notification
+        message={notification.message}
+        severity={notification.severity}
+        open={notification.open}
+        onClose={() => {
+          setNotification((prev) => ({ ...prev, open: false }));
+        }}
+      />
     </Box>
   );
 };
