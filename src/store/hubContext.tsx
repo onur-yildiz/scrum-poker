@@ -131,7 +131,7 @@ export const HubContextProdiver = (props: any) => {
       dispatch(nextRound(null));
     });
     c.on(HubMethods.RECEIVE_CONSENSUS_THRESHOLD, (threshold: number) => {
-      console.debug("Consensus threshold ", threshold);
+      console.debug("Auto-assign threshold ", threshold);
       dispatch(setConsensusThreshold({ value: threshold }));
       enqueueSnackbar(
         threshold > 0

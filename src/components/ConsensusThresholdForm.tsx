@@ -42,7 +42,7 @@ const ConsensusThresholdForm = () => {
     );
 
     setNotification({
-      message: "Set consensus threshold",
+      message: "Set auto-assign threshold",
       open: true,
     });
   };
@@ -56,7 +56,7 @@ const ConsensusThresholdForm = () => {
     );
 
     setNotification({
-      message: "Removed consensus threshold",
+      message: "Removed auto-assign threshold",
       open: true,
     });
     setThresholdInput("3");
