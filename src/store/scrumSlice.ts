@@ -133,8 +133,10 @@ const scrumSlice = createSlice({
       let storageVal: CardSetStorage = { sets: [state.room.scoreList] };
       if (cardSetStorage) {
         storageVal = JSON.parse(cardSetStorage) as CardSetStorage;
-        storageVal.sets.push(action.payload.value);
-        storageVal.sets.length > 3 && storageVal.sets.shift();
+        !storageVal.sets.some(
+          (set) => set.toString() === action.payload.value.toString()
+        ) && storageVal.sets.unshift(action.payload.value);
+        storageVal.sets.length > 3 && storageVal.sets.pop();
       }
       window.localStorage.setItem("cardSetStorage", JSON.stringify(storageVal));
 
