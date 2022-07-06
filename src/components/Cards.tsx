@@ -23,8 +23,7 @@ const Cards = () => {
     <Grid
       container
       spacing={3}
-      className={"card-grid"}
-      style={{ justifyContent: "center" }}
+      sx={{ justifyContent: "center", width: "100%", margin: "0" }}
     >
       {generateCards()}
     </Grid>

@@ -5,6 +5,7 @@ import Button from "@mui/material/Button/Button";
 import Card from "@mui/material/Card/Card";
 import CardActions from "@mui/material/CardActions/CardActions";
 import CardContent from "@mui/material/CardContent/CardContent";
+import Container from "@mui/material/Container";
 import HubContext from "../store/hubContext";
 import Typography from "@mui/material/Typography/Typography";
 import { useContext } from "react";
@@ -53,42 +54,48 @@ const IssueBox = () => {
   };
 
   return (
-    <Card variant="outlined" className="issue-box">
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {issueTitle}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {issueDesc}
-        </Typography>
-      </CardContent>
-      {isOwner && (
-        <CardActions>
-          {/* // TODO: edit issue */}
-          <Button
-            onClick={() => handleIssueSwitch(false)}
-            sx={{ marginRight: "auto" }}
-            size="large"
-            disabled={issueIndex === 0}
+    <Container maxWidth="lg">
+      <Card variant="outlined">
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            {issueTitle}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ maxHeight: "50vh", overflow: "auto" }}
           >
-            Previous
-          </Button>
-          {issueIndex !== issuesLength - 1 ? (
+            {issueDesc}
+          </Typography>
+        </CardContent>
+        {isOwner && (
+          <CardActions>
+            {/* // TODO: edit issue */}
             <Button
-              onClick={() => handleIssueSwitch(true)}
+              onClick={() => handleIssueSwitch(false)}
+              sx={{ marginRight: "auto" }}
               size="large"
-              disabled={issueIndex === issuesLength - 1}
+              disabled={issueIndex === 0}
             >
-              Next
+              Previous
             </Button>
-          ) : (
-            <Button onClick={handleAutoCreate} size="large">
-              Auto Create
-            </Button>
-          )}
-        </CardActions>
-      )}
-    </Card>
+            {issueIndex !== issuesLength - 1 ? (
+              <Button
+                onClick={() => handleIssueSwitch(true)}
+                size="large"
+                disabled={issueIndex === issuesLength - 1}
+              >
+                Next
+              </Button>
+            ) : (
+              <Button onClick={handleAutoCreate} size="large">
+                Auto Create
+              </Button>
+            )}
+          </CardActions>
+        )}
+      </Card>
+    </Container>
   );
 };
 

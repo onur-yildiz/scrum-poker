@@ -1,8 +1,8 @@
+import { Paper, Typography } from "@mui/material";
 import { PropsWithChildren, useContext } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 
 import HubContext from "../store/hubContext";
-import { Paper } from "@mui/material";
 import { castVote } from "../store/scrumSlice";
 import { useTheme } from "@mui/system";
 
@@ -44,14 +44,18 @@ const ScoreCard = (props: PropsWithChildren<OutlinedCardProps>) => {
   const isSelected = currentVoteValue === parseFloat(props.value);
   return (
     <Paper
-      className={`${props.className} flex-center unselectable`}
+      className={`${props.className} unselectable`}
       onClick={handleVote}
       sx={{
         backgroundColor: isSelected ? theme.palette.primary.main : null,
         color: isSelected ? theme.palette.primary.contrastText : null,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexWrap: "wrap",
       }}
     >
-      <span className="card-span">{props.value}</span>
+      <Typography variant="h4">{props.value}</Typography>
     </Paper>
   );
 };

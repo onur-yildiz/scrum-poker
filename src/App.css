@@ -1,7 +1,6 @@
 html,
 body,
-#root,
-.app {
+#root {
   height: 100%;
   width: 100%;
   overflow: hidden;
@@ -27,20 +26,6 @@ body,
   background-color: #555;
 }
 
-.full-width {
-  width: 100%;
-}
-
-.app {
-  display: flex;
-  text-align: center;
-  justify-content: center;
-}
-
-#navbar {
-  z-index: 9999;
-}
-
 .unselectable {
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -50,15 +35,7 @@ body,
   user-select: none;
 }
 
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.score-card,
-.vote-card {
+.score-card {
   margin: .5em;
   width: 5em;
   height: 8em;
@@ -68,19 +45,6 @@ body,
   margin: .5em;
   width: 4em;
   height: 4em;
-}
-
-.issue-box {
-  width: 80%;
-  overflow: initial !important;
-}
-
-.vote-card {
-  background-color: lightgreen !important;
-}
-
-.card-span {
-  font-size: 2em;
 }
 
 .card-values-form,
@@ -97,27 +61,9 @@ body,
   margin: .5em !important;
 }
 
-#card-values,
-#issue-form-title {
-  min-width: 10em;
-  width: 25vw;
-}
-
-#issue-form-description {
-  min-width: 10em;
-  width: 50vw;
-}
-
-.card-grid {
-  width: 100% !important;
-  margin: 0 !important;
-}
-
 .card-values-form>div:not(:last-child) {
   margin-bottom: 1em;
 }
-
-
 
 .scrum-screen-view {
   display: flex;
@@ -137,20 +83,10 @@ body,
   margin-bottom: 1em !important;
 }
 
-.flex-start {
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-}
-
 .member-list-container {
   height: calc(var(--vh) * 100);
   overflow-y: auto;
 }
-
-/* .member-list-item>*:last-child {
-  margin-left: .2em;
-} */
 
 .vote-result-box {
   text-align: center;
@@ -172,22 +108,9 @@ body,
 }
 
 @media screen and (max-width: 900px) {
-  .scrum-screen-layout>*:first-child {
-    width: 200px;
-  }
-
-  .scrum-screen-layout>*:nth-child(2) {
-    margin-left: 200px;
-  }
-
   .score-card {
     margin: .5em;
     width: 4em;
     height: 6em;
-
-  }
-
-  .issue-box {
-    width: 100%;
   }
 }

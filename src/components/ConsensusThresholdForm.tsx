@@ -72,6 +72,7 @@ const ConsensusThresholdForm = () => {
         value={thresholdInput}
         onChange={handleChange}
         variant="outlined"
+        type="number"
         helperText={!isValid ? "Value must be greater than 2" : ""}
       />
       <Stack direction="row" spacing={2} alignItems="stretch">

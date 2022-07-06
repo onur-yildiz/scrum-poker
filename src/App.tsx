@@ -1,6 +1,7 @@
 import "./App.css";
 
 import {
+  Box,
   CssBaseline,
   IconButton,
   SxProps,
@@ -47,7 +48,16 @@ function App() {
   }, []);
 
   return (
-    <main id="#app" className="app">
+    <Box
+      component="main"
+      sx={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        textAlign: "center",
+        justifyContent: "center",
+      }}
+    >
       <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
         <CssBaseline />
         <IconButton
@@ -92,7 +102,7 @@ function App() {
           />
         </Routes>
       </ThemeProvider>
-    </main>
+    </Box>
   );
 }
 

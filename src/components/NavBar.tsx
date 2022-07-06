@@ -54,6 +54,7 @@ const NavBar = () => {
       elevation={0}
       variant="outlined"
       color="default"
+      sx={{ zIndex: 9999 }}
     >
       <Toolbar variant="dense">
         <Tabs value={value} selectionFollowsFocus sx={{ flexGrow: 1 }}>

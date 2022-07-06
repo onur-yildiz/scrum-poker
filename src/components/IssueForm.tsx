@@ -44,6 +44,7 @@ const IssueForm = () => {
         value={issueTitle}
         onChange={(e) => setIssueTitle(e.target.value)}
         variant="outlined"
+        fullWidth
       />
       <TextField
         id="issue-form-description"
@@ -53,6 +54,7 @@ const IssueForm = () => {
         value={issueDescription}
         onChange={(e) => setIssueDescription(e.target.value)}
         variant="outlined"
+        fullWidth
       />
       <Button variant="contained" size="large" disableElevation type="submit">
         Create

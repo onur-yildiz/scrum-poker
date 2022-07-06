@@ -45,8 +45,11 @@ const MainScreen = () => {
 
   return (
     <Box
-      className="full-width"
-      sx={{ height: "100%", display: isValidated ? "initial" : "none" }}
+      sx={{
+        height: "100%",
+        width: "100%",
+        display: isValidated ? "initial" : "none",
+      }}
     >
       <Backdrop
         sx={{

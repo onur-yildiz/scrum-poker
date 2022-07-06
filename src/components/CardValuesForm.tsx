@@ -97,6 +97,7 @@ const CardValuesForm = () => {
         onChange={handleChange}
         helperText={`Seperate values by comma (ex. 1,2,3,4,5)`}
         variant="outlined"
+        sx={{ maxWidth: "100%", width: "30em" }}
       />
       <Button
         disabled={!isValid}
