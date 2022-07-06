@@ -1,4 +1,5 @@
 import Alert, { AlertColor } from "@mui/material/Alert";
+import Slide, { SlideProps } from "@mui/material/Slide";
 
 import AlertTitle from "@mui/material/AlertTitle";
 import Snackbar from "@mui/material/Snackbar";
@@ -16,11 +17,13 @@ interface NotificationProps {
 const Notification = (props: NotificationProps) => {
   const { severity, variant, open, onClose, autoHideDuration, message, title } =
     props;
+
   return (
     <Snackbar
       open={open}
       autoHideDuration={autoHideDuration ?? 2000}
       onClose={onClose}
+      TransitionComponent={TransitionLeft}
     >
       <Alert variant={variant ?? "filled"} severity={severity ?? "info"}>
         {title && <AlertTitle>{title}</AlertTitle>}
@@ -29,5 +32,9 @@ const Notification = (props: NotificationProps) => {
     </Snackbar>
   );
 };
+
+const TransitionLeft = (props: SlideProps) => (
+  <Slide {...props} direction="right" />
+);
 
 export default Notification;
