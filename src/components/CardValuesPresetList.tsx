@@ -23,7 +23,6 @@ const CardValuesPresetList = (
           <Button
             key={i}
             variant="outlined"
-            disableElevation
             color="secondary"
             onClick={() => props.onClick(set)}
           >
