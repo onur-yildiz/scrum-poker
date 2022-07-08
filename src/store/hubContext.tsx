@@ -107,7 +107,7 @@ export const HubContextProdiver = (props: any) => {
     c.on(HubMethods.RECEIVE_ROOM_NOT_EXISTING, (roomId: string) => {
       console.debug("Room not existing ", roomId);
       dispatch(resetRoomState(roomId));
-      navigate(-1);
+      navigate("/joinorcreate");
       enqueueSnackbar(`Room does not exist`, { variant: "error" });
     });
     c.on(HubMethods.RECEIVE_USER_LEFT, (userId: string) => {
