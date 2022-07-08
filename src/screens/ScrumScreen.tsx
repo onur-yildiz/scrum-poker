@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 
 import ExitToApp from "@mui/icons-material/ExitToApp";
 import HubContext from "../store/hubContext";
@@ -17,9 +17,8 @@ import Resizable from "../components/Resizable";
 import { leaveRoom } from "../store/scrumSlice";
 import { validate as validateUuid } from "uuid";
 
-const MainScreen = () => {
+const ScrumScreen = () => {
   const hub = useContext(HubContext);
-  const [isValidated, setIsValidated] = useState(false);
   const { roomId } = useParams();
   const loadedRoomId = useAppSelector((state) => state.scrum.room.id);
   const navigate = useNavigate();
@@ -39,7 +38,6 @@ const MainScreen = () => {
       return navigate(`/joinorcreate/${roomId}`);
     }
 
-    setIsValidated(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -48,7 +46,6 @@ const MainScreen = () => {
       sx={{
         height: "100%",
         width: "100%",
-        display: isValidated ? "initial" : "none",
       }}
     >
       <Backdrop
@@ -80,4 +77,4 @@ const MainScreen = () => {
   );
 };
 
-export default MainScreen;
+export default ScrumScreen;
