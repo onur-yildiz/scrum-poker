@@ -47,6 +47,8 @@ const ScoreCard = (props: PropsWithChildren<OutlinedCardProps>) => {
       className={`${props.className} unselectable`}
       onClick={handleVote}
       sx={{
+        transitionProperty: "color, background, box-shadow",
+        transitionDuration: 250,
         backgroundColor: isSelected ? theme.palette.primary.main : null,
         color: isSelected ? theme.palette.primary.contrastText : null,
         display: "flex",
@@ -54,6 +56,7 @@ const ScoreCard = (props: PropsWithChildren<OutlinedCardProps>) => {
         justifyContent: "center",
         flexWrap: "wrap",
       }}
+      elevation={isSelected ? 8 : 1}
     >
       <Typography variant="h4">{props.value}</Typography>
     </Paper>
