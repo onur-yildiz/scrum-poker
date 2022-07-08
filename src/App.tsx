@@ -26,6 +26,7 @@ import { useEffect } from "react";
 import { validate as validateUuid } from "uuid";
 
 function App() {
+  const navbar = document.getElementById("navbar");
   const [roomId, theme] = useAppSelector((state) => [
     state.scrum.room.id,
     state.appSettings.theme,
@@ -34,7 +35,7 @@ function App() {
 
   useEffect(() => {
     const handleResize = () => {
-      const navbarHeight = document.getElementById("navbar")?.clientHeight ?? 0;
+      const navbarHeight = navbar?.clientHeight ?? 0;
       const remainingHeight = window.innerHeight - navbarHeight;
       const vh = remainingHeight * 0.01;
       document.documentElement.style.setProperty("--vh", `${vh}px`);
@@ -45,7 +46,7 @@ function App() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [navbar]);
 
   return (
     <Box
